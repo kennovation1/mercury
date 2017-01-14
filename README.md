@@ -71,4 +71,11 @@ sudo apt-get update
 sudo apt-get dist-upgrade
 ```
 
-Oh now I remember. I used the linux source for ideas, but wrote my own in Python directly.
+Instead of using the C library above, just write my own Python code. See pacled64.py.
+
+# Git
+git init
+git add README.md 
+git commit -m "Initial commit"
+git remote add origin git@github.com:kennovation1/mercury.git
+git push -u origin master
