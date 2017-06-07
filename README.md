@@ -45,12 +45,20 @@ In practice, each guage will need to be manually calibrated. My SG92R micro serv
 * lsusb -v and expect to find in the output:
   * idVendor           0xd209 Ultimarc
   * idProduct          0x1401
-* Connect anode (positive) of all LEDs to + on board
-* Connect cathode (negative) of each LED to a numbered (1-64) pin on board. No resistor is required. LEDs are driven with a constant 20mA
-* Supply +12VDC for LEDs at barrel connector
-* Power up (before any command is given) will wave the LEDs
+* Connect anode (positive, longer lead) of all LEDs to + on board
+* Connect cathode (negative, shorter lead, flat side) of each LED to a numbered (1-64) pin on board. No resistor is required. LEDs are driven with a constant 20mA
+* Supply +12VDC for LEDs at barrel connector. A HDD connector is provided to supply power. The pinout is:
+  * 1 - yellow: +12V
+  * 2 - black:  gnd
+  * 3 - black:  gnd
+  * 4 - red:    +5V
+  * Note that the connector provided by Ultimarc was miswired and was using pins 3 and 4 instead of 1 and 2. I corrected the connector.
+* Power up default (i.e., before any command is given) will wave the LEDs
 * Linux SDK: http://katiesnow.webs.com/
 * Corresponding github link: https://github.com/katie-snow/Ultimarc-linux
+
+Connected 2 LEDs in parallel and they look good and bright but not as bright as indidually. This makes since since the PacLED64 is giving constant current, but with parallel LEDs they each only get half.
+On voltage is 2.04V and 24.2mA through a single amber LED.
 ```
 mkdir mercury
 cd mercury
