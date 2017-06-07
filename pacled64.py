@@ -38,24 +38,30 @@ PACLED_FADE_ALL_BASE = 4
 UM_REQUEST_TYPE = 0x21
 UM_REQUEST = 9
 
-
 # PacDrive characteristics
 PACLED_PINS = 64
-
 MAX_BOARDS = 1
 
+'''
+Class represents a set of PacLED boards and pins.
+Boards are numbered starting at 1.
+
+General approach is to write state changes to an array of boards where the
+value for each is a bitmap for the pins on that board. Then send the state to
+the board.
+'''
 class PacLED:
     def __init__(self, dryRun=True):
         self.dryRun = dryRun
         self.state = []
         for i in range(MAX_BOARDS+1):
-            self.state.append([0, 0]) # LSB, MSB. N.B. Boards are numbered from 1. state[0] is unused.
+            self.state.append([0, 0]) # LSB, MSB. N.B. state[0] is unused.
 
     def getState(self):
         return self.state
 
-    def getLampState(self, board, pin):
-        lowByte = self.state[board][0]
+    def getLedState(self, board, pin):
+        lowByte  = self.state[board][0]
         highByte = self.state[board][1]
 
         (lowByteMask, highByteMask) = mapPin(pin)
@@ -83,6 +89,7 @@ class PacLED:
 
     def updatePin(self, board, pin, state):
         ''' Set a single pin on or off '''
+        # TODO: This is still assuming 16-bit pacdrive boards
         (lowByte, highByte) = mapPin(pin)
         if state:
             self.state[board][0] |= lowByte 
@@ -94,6 +101,7 @@ class PacLED:
 
     def updatePattern(self, pattern):
         ''' Set the output state according to a pattern command '''
+        # TODO: This is still assuming 16-bit pacdrive boards
         if pattern == 'ALL_ON':
             value = 0xff
         elif pattern == 'EVEN_ONLY':
@@ -116,6 +124,7 @@ class PacLED:
 
     def updatePacLED(self, board):
         ''' Send a command to update the output state of an attached PacLED '''
+        # TODO: This is still assuming 16-bit pacdrive boards
         msg = [0x00, 0x00, 0x00, 0x00]
         msg[3] = self.state[board][0] # LSB
         msg[2] = self.state[board][1] # MSB
@@ -133,6 +142,7 @@ def mapPin(pin):
     Set bit to enable provided pin. Pin should be in the range 1-16.
     Returns a tuple (highByte, lowByte)
     '''
+    # TODO: This is still assuming 16-bit pacdrive boards
     if pin <= 8:
         lowByte = 0x1 << pin-1
         highByte = 0x0
@@ -154,72 +164,74 @@ def mapLogicalIdToBoardAndPin(logicalId):
 
 def mapLabelToBoardAndPin(label):
     '''
-    Map a text label for a lamp to the board and pin that the is wired to that lamp
+    Map a text label for a LED to the board and pin that the is wired to that LED
     Returns a tuple (boardId, pin)
-
-    Label suffix meaning is the lamps within the labeled switch. (Buzzer is a special case).
-    Looking at front of legend switch, the lamps are labeled as:
-    A B
-    D C
-
-    Therefore, top row is suffix -AB, bottom is -CD, non divided is usually wired with diagnonals
-    and therefore with a suffix of -CD.
     '''
     labelMap = {
-            'DS1-Negative': (4,16),
-            'A1-AC': (2,15),
-            'A2-AC': (1,12),
-            'A3-AC': (4,7),
-            'A4-AC': (4,8),
-            'A5-AB': (3,15),
-            'A5-CD': (3,16),
-            'A6-AB': (4,1),
-            'A6-CD': (4,2),
-            'A7-AB': (4,3),
-            'A7-CD': (4,4),
-            'A8-AB': (4,5),
-            'A8-CD': (4,6),
-            'A9-AB': (1,13),
-            'A9-CD': (1,14),
-            'A10-AB': (1,1),
-            'A10-CD': (2,1),
-            'A11-AB': (1,2),
-            'A11-CD': (2,2),
-            'A12-AB': (1,3),
-            'A12-CD': (2,3),
-            'A13-AB': (1,4),
-            'A13-CD': (2,4),
-            'A14-AB': (1,5),
-            'A14-CD': (2,5),
-            'A15-AB': (1,6),
-            'A15-CD': (2,6),
-            'A16-AB': (1,7),
-            'A16-CD': (2,8),
-            'A17-AC': (2,7),
-            'A18-AB': (1,8),
-            'A18-CD': (2,9),
-            'A19-AB': (1,9),
-            'A19-CD': (2,10),
-            'A20-AB': (1,10),
-            'A20-CD': (2,11),
-            'A21-AB': (1,11),
-            'A21-CD': (2,12),
-            'A22-AB': (2,13),
-            'A22-CD': (2,14),
-            'A23-AC': (3,1),
-            'A24-AC': (3,2),
-            'A25-AC': (3,3),
-            'A26-AC': (3,4),
-            'A27-AC': (3,5),
-            'A28-AC': (3,6),
-            'A29-AC': (3,7),
-            'A30-AC': (3,8),
-            'A31-AC': (3,9),
-            'A32-AC': (3,10),
-            'A33-AC': (3,11),
-            'A34-AC': (3,12),
-            'A35-AC': (3,13),
-            'A36-AC': (3,14)
+            'sw1': (1,1),
+            'sw2': (1,2),
+            'sw3': (1,3),
+            'sw4': (1,4),
+            'sw5': (1,5),
+            'sw6': (1,6),
+            'sw7': (1,7),
+            'sw8': (1,8),
+            'sw9': (1,9),
+            'sw10': (1,10),
+            'sw11': (1,11),
+            'sw12': (1,12),
+            'sw13': (1,13),
+            'sw14': (1,14),
+            'sw15': (1,15),
+            'sw16': (1,16),
+            'sw17': (1,17),
+            'sw18': (1,18),
+            'sw19': (1,19),
+            'sw20': (1,20),
+            'sw21': (1,21),
+            'sw22': (1,22),
+            'sw23': (1,23),
+            'sw24': (1,24),
+            'sw25': (1,25),
+            'sw26': (1,26),
+            'sw27': (1,27),
+            'sw28': (1,28),
+            'sw29': (1,29),
+            'sw30': (1,30),
+            'sw31': (1,31),
+            'sw32': (1,32),
+            'sw33': (1,33),
+            'sw34': (1,34),
+            'sw35': (1,35),
+            'sw36': (1,36),
+            'sw37': (1,37),
+            'sw38': (1,38),
+            'sw39': (1,39),
+            'sw40': (1,40),
+            'sw41': (1,41),
+            'sw42': (1,42),
+            'sw43': (1,43),
+            'sw44': (1,44),
+            'sw45': (1,45),
+            'sw46': (1,46),
+            'sw47': (1,47),
+            'sw48': (1,48),
+            'sw49': (1,49),
+            'sw50': (1,50),
+            'sw51': (1,51),
+            'sw52': (1,52),
+            'sw53': (1,53),
+            'sw54': (1,54),
+            'sw55': (1,55),
+            'sw56': (1,56),
+            'sw57': (1,57),
+            'sw58': (1,58),
+            'sw59': (1,59),
+            'sw60': (1,60),
+            'sw61': (1,61),
+            'sw62': (1,62),
+            'sw63': (1,63),
+            'sw64': (1,64)
             }
     return labelMap[label]
 
@@ -229,20 +241,21 @@ def mapLabelToBoardAndPin(label):
 #############
 class TestController(unittest.TestCase):
     def setUp(self):
-        self.dryRun = True
+        self.dryRun = False
 
-    @unittest.skip('Only run this if I change mapPin')
+    # TODO @unittest.skip('Only run this if I change mapPin')
     def test_mapPin(self):
         print '\nTest of mapPin'
-        for pin in range(1,17):
+        for pin in range(1,65):
             (lowByte, highByte) = mapPin(pin)
             print '%d\t0x%02x\t0x%02x' % (pin, highByte, lowByte)
         # A few tests, but mostly just need to read the output when changing the code
-        self.assertEqual(pin, 16, 'Unexpected pin value')
+        self.assertEqual(pin, 64, 'Unexpected pin value')
+        # TODO Fix the next two lines...
         self.assertEqual(highByte, 0x80, 'Unexpected highByte value')
         self.assertEqual(lowByte, 0x0, 'Unexpected lowByte value')
 
-    @unittest.skip('Only run this if I change mapLogicalIdToBoardAndPin')
+    # TODO @unittest.skip('Only run this if I change mapLogicalIdToBoardAndPin')
     def test_mapLogicalIdToBoardAndPin(self):
         print '\nTest of mapLogicalIdToBoardAndPin'
         # A few tests, but mostly just need to read the output when changing the code
@@ -250,19 +263,19 @@ class TestController(unittest.TestCase):
             (boardId, pin) = mapLogicalIdToBoardAndPin(logicalId)
             print '%d\t%d\t%d' % (logicalId, boardId, pin)
         self.assertEqual(logicalId, 64, 'Unexpected logicalId value')
-        self.assertEqual(boardId, 4, 'Unexpected boardId value')
-        self.assertEqual(pin, 16, 'Unexpected pin value')
+        self.assertEqual(boardId, 1, 'Unexpected boardId value')
+        self.assertEqual(pin, 64, 'Unexpected pin value')
 
-    @unittest.skip('Only run this if I change mapLabelToBoardAndPin')
+    # TODO @unittest.skip('Only run this if I change mapLabelToBoardAndPin')
     def test_mapLabelToBoardAndPin(self):
         # A few tests, but mostly just need to read the output when changing the code
         print '\nTest of mapLabelToBoardAndPin'
-        (boardId, pin) = mapLabelToBoardAndPin('A1')
-        print '%s\t%d\t%d' % ('A1', boardId, pin)
-        (boardId, pin) = mapLabelToBoardAndPin('A2')
-        print '%s\t%d\t%d' % ('A2', boardId, pin)
-        self.assertEqual(boardId, 3, 'Unexpected boardId value')
-        self.assertEqual(pin, 4, 'Unexpected boardId value')
+        (boardId, pin) = mapLabelToBoardAndPin('sw1')
+        print '%s\t%d\t%d' % ('sw1', boardId, pin)
+        (boardId, pin) = mapLabelToBoardAndPin('sw2')
+        print '%s\t%d\t%d' % ('sw2', boardId, pin)
+        self.assertEqual(boardId, 1, 'Unexpected boardId value')
+        self.assertEqual(pin, 2, 'Unexpected boardId value')
 
     def test_initializeAllPacDrives(self):
         pl = PacLED(dryRun=self.dryRun)
@@ -283,8 +296,9 @@ class TestController(unittest.TestCase):
     def test_updatePinSet(self):
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
-        pl.updatePin(1, 16, True)
+        pl.updatePin(1, 64, True)
         state = pl.getState()
+        # TODO fix the next 2 lines
         self.assertEqual(state[1][0], 0x00, 'Pin update of LSB wrong')
         self.assertEqual(state[1][1], 0x80, 'Pin update of MSB wrong')
 
@@ -305,6 +319,7 @@ class TestController(unittest.TestCase):
         pl.initializeAllPacLEDs()
         pl.updatePattern('ODD_ONLY')
         state = pl.getState()
+        # TODO fix next 2 lines
         self.assertEqual(state[1][0], 0x55, 'Pattern update wrong')
         self.assertEqual(state[1][1], 0x55, 'Pattern update wrong')
 
