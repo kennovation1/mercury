@@ -17,6 +17,23 @@ Author: Ken Robbins
 
 Thanks to Robert Abram and Katie Snow (Ultimarc-linux) whose source code provided insight into PacLED64
 programming and for their #define values for PACLED*
+
+Command interface design:
+Function                            low byte            high byte
+--------                            --------            ---------
+Set one LED to given intensity      LED num             intensity value
+Set all LEDs to given intensity     0x80                intensity value
+Set all LEDs in random mode         0x89                0
+Fade all LEDs at given rate         0x40                fade rate + PACLED_FADE_ALL_BASE
+Fade one LED at given rate          LED num +           fade rate
+                                    PACLED_FADE_BASE
+Update board ID                     0xFE                newId + 240
+
+LED num: 0-63
+fade rate: 0-3
+intensity: 0-255
+PACLED_FADE_BASE: 64
+PACLED_FADE_ALL_BASE: 4
 '''
 import usb.core
 import usb.util
