@@ -1,4 +1,6 @@
 '''
+TODO: Still needs porting to pacled64 from old pac16 design...
+
 File: pacled64.py
 
 Utility to control an Ultimarc PacLED64.
@@ -8,6 +10,8 @@ At present, this is focused on my Mercury capsule project.
 My use case is to control a single PacLED64 on a single USB bus.
 The devices were ordered with no changes to default settings (unlike how my PacDrives were ordered)
 This is meant to work on a Raspberry PI 3 model B and is not generalized beyond that.
+
+See README.md for wiring notes (perhaps move/copy to here in the future).
 
 Author: Ken Robbins
 
@@ -225,7 +229,7 @@ def mapLabelToBoardAndPin(label):
 #############
 class TestController(unittest.TestCase):
     def setUp(self):
-        self.dryRun = False
+        self.dryRun = True
 
     @unittest.skip('Only run this if I change mapPin')
     def test_mapPin(self):
@@ -279,10 +283,10 @@ class TestController(unittest.TestCase):
     def test_updatePinSet(self):
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
-        pl.updatePin(4, 16, True)
-        state = pd.getState()
-        self.assertEqual(state[4][0], 0x00, 'Pin update of LSB wrong')
-        self.assertEqual(state[4][1], 0x80, 'Pin update of MSB wrong')
+        pl.updatePin(1, 16, True)
+        state = pl.getState()
+        self.assertEqual(state[1][0], 0x00, 'Pin update of LSB wrong')
+        self.assertEqual(state[1][1], 0x80, 'Pin update of MSB wrong')
 
     def test_updatePinClear(self):
         pl = PacLED(dryRun=self.dryRun)
@@ -301,8 +305,8 @@ class TestController(unittest.TestCase):
         pl.initializeAllPacLEDs()
         pl.updatePattern('ODD_ONLY')
         state = pl.getState()
-        self.assertEqual(state[4][0], 0x55, 'Pattern update wrong')
-        self.assertEqual(state[4][1], 0x55, 'Pattern update wrong')
+        self.assertEqual(state[1][0], 0x55, 'Pattern update wrong')
+        self.assertEqual(state[1][1], 0x55, 'Pattern update wrong')
 
     def test_updateAllPacLEDs(self):
         pl = PacLED(dryRun=self.dryRun)
@@ -313,8 +317,8 @@ class TestController(unittest.TestCase):
     def test_updatePacLED(self):
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
-        pl.updatePin(2, 8, True)
-        pl.updatePacLED(2)
+        pl.updatePin(1, 8, True)
+        pl.updatePacLED(1)
         self.assertTrue(True, 'Visually inspect output to see that the board was updated')
 
 
