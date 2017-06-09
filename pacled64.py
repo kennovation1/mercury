@@ -1,6 +1,4 @@
 '''
-TODO: Still needs porting to pacled64 from old pac16 design...
-
 File: pacled64.py
 
 Utility to control an Ultimarc PacLED64.
@@ -19,8 +17,8 @@ Thanks to Robert Abram and Katie Snow (Ultimarc-linux) whose source code provide
 programming and for their #define values for PACLED*
 
 Command interface design:
-Function                            low byte            high byte
---------                            --------            ---------
+Function                            low byte map[0]     high byte map[1]
+----------------------------------  -----------------   ----------------
 Set one LED to given intensity      LED num             intensity value
 Set all LEDs to given intensity     0x80                intensity value
 Set all LEDs in random mode         0x89                0
@@ -56,33 +54,19 @@ UM_REQUEST_TYPE = 0x21
 UM_REQUEST = 9
 
 # PacDrive characteristics
-PACLED_PINS = 64
+PACLED_LEDS = 64
 MAX_BOARDS = 1
 
 '''
-Class represents a set of PacLED boards and pins.
+Class represents a set of PacLED boards and their LED controls.
 Boards are numbered starting at 1.
 
-General approach is to write state changes to an array of boards where the
-value for each is a bitmap for the pins on that board. Then send the state to
-the board.
+Unlike the PacDrives, no shadow state is maintained. Commands are directly
+written to the board.
 '''
 class PacLED:
     def __init__(self, dryRun=True):
         self.dryRun = dryRun
-        self.state = []
-        for i in range(MAX_BOARDS+1):
-            self.state.append([0, 0]) # LSB, MSB. N.B. state[0] is unused.
-
-    def getState(self):
-        return self.state
-
-    def getLedState(self, board, pin):
-        lowByte  = self.state[board][0]
-        highByte = self.state[board][1]
-
-        (lowByteMask, highByteMask) = mapPin(pin)
-        return lowByte & lowByteMask or highByte & highByteMask
 
     def initializeAllPacLEDs(self):
         '''
@@ -104,49 +88,39 @@ class PacLED:
 	    dev.set_configuration() # Assumes that the default is the right one
 	    self.devs[dev.bcdDevice] = dev
 
-    def updatePin(self, board, pin, state):
-        ''' Set a single pin on or off '''
-        # TODO: This is still assuming 16-bit pacdrive boards
-        (lowByte, highByte) = mapPin(pin)
-        if state:
-            self.state[board][0] |= lowByte 
-            self.state[board][1] |= highByte
+    def setLEDIntensityPhysical(self, board, LED, intensity):
+        '''
+        Given a board (1-4) and an LED number (1-64), set the intensity (0-255)
+        where 0 is off and 255 is full brightness.
+        'Physical' means that we are using board and LED addressing instead of a
+        logical 1-256 LED namespace.
+        '''
+        msg = {}
+        if LED is 'ALL':
+            msg[0] = 0x80
         else:
-            self.state[board][0] &= ~lowByte & 0xff
-            self.state[board][1] &= ~highByte & 0xff
-        self.updatePacLED(board)
+            msg[0] = LED & 0x00ff
+        msg[1] = intensity & 0x00ff
+
+        self.sendCommand(board, msg)
+
 
     def updatePattern(self, pattern):
         ''' Set the output state according to a pattern command '''
-        # TODO: This is still assuming 16-bit pacdrive boards
+        # TODO: write this
         if pattern == 'ALL_ON':
-            value = 0xff
+            pass
         elif pattern == 'EVEN_ONLY':
-            value = 0xaa
+            pass
         elif pattern == 'ODD_ONLY':
-            value = 0x55
+            pass
         else: # 'ALL_OFF'
-            value = 0x00
+            pass
 
-        for i in range(len(self.state)):
-            self.state[i][0] = value
-            self.state[i][1] = value
-
-        self.updateAllPacLEDs()
-
-    def updateAllPacLEDs(self):
-        ''' Send update to all attached hardware '''
-        for board in self.devs:
-            self.updatePacLED(board)
-
-    def updatePacLED(self, board):
-        ''' Send a command to update the output state of an attached PacLED '''
-        # TODO: This is still assuming 16-bit pacdrive boards
-        msg = [0x00, 0x00, 0x00, 0x00]
-        msg[3] = self.state[board][0] # LSB
-        msg[2] = self.state[board][1] # MSB
+    def sendCommand(self, board, msg):
+        ''' Send a command to an attached PacLED '''
         if self.dryRun:
-            print 'dryRun: 0x%02x 0x%02x' % (msg[2], msg[3])
+            print 'dryRun: 0x%02x 0x%02x' % (msg[0], msg[1])
         else:
             assert self.devs[board].ctrl_transfer(UM_REQUEST_TYPE, UM_REQUEST, PACLED_VALUE, PACLED_INDEX, msg) == PACLED_MESG_LENGTH
 
@@ -154,35 +128,20 @@ class PacLED:
 
 # Utility functions:
 
-def mapPin(pin):
-    '''
-    Set bit to enable provided pin. Pin should be in the range 1-16.
-    Returns a tuple (highByte, lowByte)
-    '''
-    # TODO: This is still assuming 16-bit pacdrive boards
-    if pin <= 8:
-        lowByte = 0x1 << pin-1
-        highByte = 0x0
-    else:
-        lowByte = 0x0
-        highByte = 0x1 << pin-9
-
-    return (lowByte, highByte)
-
-def mapLogicalIdToBoardAndPin(logicalId):
+def mapLogicalIdToBoardAndLED(logicalId):
     '''
     Maps a logical ID in the range of 1 to 256 to a board ID (1-4)
-    and a pin number (1-64)
-    Returns a tuple (boardId, pin)
+    and a LED number (1-64)
+    Returns a tuple (boardId, LED)
     '''
-    boardId = ((logicalId-1) / PACLED_PINS) + 1
-    pin  = ((logicalId-1) % PACLED_PINS) + 1
-    return (boardId, pin)
+    boardId = ((logicalId-1) / PACLED_LEDS) + 1
+    LED  = ((logicalId-1) % PACLED_LEDS) + 1
+    return (boardId, LED)
 
-def mapLabelToBoardAndPin(label):
+def mapLabelToBoardAndLED(label):
     '''
-    Map a text label for a LED to the board and pin that the is wired to that LED
-    Returns a tuple (boardId, pin)
+    Map a text label for a LED to the board and LED number that is wired to that LED
+    Returns a tuple (boardId, LED)
     '''
     labelMap = {
             'sw1': (1,1),
@@ -260,39 +219,29 @@ class TestController(unittest.TestCase):
     def setUp(self):
         self.dryRun = False
 
-    # TODO @unittest.skip('Only run this if I change mapPin')
-    def test_mapPin(self):
-        print '\nTest of mapPin'
-        for pin in range(1,65):
-            (lowByte, highByte) = mapPin(pin)
-            print '%d\t0x%02x\t0x%02x' % (pin, highByte, lowByte)
+    @unittest.skip('Only run this if I change mapLogicalIdToBoardAndLED')
+    def test_mapLogicalIdToBoardAndLED(self):
+        print '\nTest of mapLogicalIdToBoardAndLED'
         # A few tests, but mostly just need to read the output when changing the code
-        self.assertEqual(pin, 64, 'Unexpected pin value')
-        # TODO Fix the next two lines...
-        self.assertEqual(highByte, 0x80, 'Unexpected highByte value')
-        self.assertEqual(lowByte, 0x0, 'Unexpected lowByte value')
+        for logicalId in range(1,129):
+            (boardId, LED) = mapLogicalIdToBoardAndLED(logicalId)
+            print '%d\t%d\t%d' % (logicalId, boardId, LED)
+        self.assertEqual(logicalId, 128, 'Unexpected logicalId value')
+        self.assertEqual(boardId, 2, 'Unexpected boardId value')
+        self.assertEqual(LED, 64, 'Unexpected LED value')
 
-    # TODO @unittest.skip('Only run this if I change mapLogicalIdToBoardAndPin')
-    def test_mapLogicalIdToBoardAndPin(self):
-        print '\nTest of mapLogicalIdToBoardAndPin'
+    @unittest.skip('Only run this if I change mapLabelToBoardAndLED')
+    def test_mapLabelToBoardAndLED(self):
         # A few tests, but mostly just need to read the output when changing the code
-        for logicalId in range(1,65):
-            (boardId, pin) = mapLogicalIdToBoardAndPin(logicalId)
-            print '%d\t%d\t%d' % (logicalId, boardId, pin)
-        self.assertEqual(logicalId, 64, 'Unexpected logicalId value')
+        print '\nTest of mapLabelToBoardAndLED'
+        (boardId, LED) = mapLabelToBoardAndLED('sw1')
+        print '%s\t%d\t%d' % ('sw1', boardId, LED)
+        (boardId, LED) = mapLabelToBoardAndLED('sw2')
+        print '%s\t%d\t%d' % ('sw2', boardId, LED)
+        (boardId, LED) = mapLabelToBoardAndLED('sw64')
+        print '%s\t%d\t%d' % ('sw64', boardId, LED)
         self.assertEqual(boardId, 1, 'Unexpected boardId value')
-        self.assertEqual(pin, 64, 'Unexpected pin value')
-
-    # TODO @unittest.skip('Only run this if I change mapLabelToBoardAndPin')
-    def test_mapLabelToBoardAndPin(self):
-        # A few tests, but mostly just need to read the output when changing the code
-        print '\nTest of mapLabelToBoardAndPin'
-        (boardId, pin) = mapLabelToBoardAndPin('sw1')
-        print '%s\t%d\t%d' % ('sw1', boardId, pin)
-        (boardId, pin) = mapLabelToBoardAndPin('sw2')
-        print '%s\t%d\t%d' % ('sw2', boardId, pin)
-        self.assertEqual(boardId, 1, 'Unexpected boardId value')
-        self.assertEqual(pin, 2, 'Unexpected boardId value')
+        self.assertEqual(LED, 64, 'Unexpected boardId value')
 
     def test_initializeAllPacDrives(self):
         pl = PacLED(dryRun=self.dryRun)
@@ -303,33 +252,39 @@ class TestController(unittest.TestCase):
         # for dev in pl.devs:
         #    usb.util.dispose_resources(dev)
 
-    def test_getState(self):
-        pl = PacLED(dryRun=self.dryRun)
-        state = pl.getState()
-        print 'getState returned:'
-        print state
-        self.assertEqual(len(state), MAX_BOARDS+1, 'Wrong length for state')
-
-    def test_updatePinSet(self):
+    def test_setLEDIntensityPhysicalRamp(self):
+        '''
+        Set each of 64 LEDs on board 1 to an intensity proportial to the LED number
+        '''
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
-        pl.updatePin(1, 64, True)
-        state = pl.getState()
-        # TODO fix the next 2 lines
-        self.assertEqual(state[1][0], 0x00, 'Pin update of LSB wrong')
-        self.assertEqual(state[1][1], 0x80, 'Pin update of MSB wrong')
+        for LED in range(1, 65):
+            pl.setLEDIntensityPhysical(1, LED, LED*4 - 1)
+        print 'Visually verify that LED intensity ramps from LED 1 as dimmest to LED 64 as brightest'
+        self.assertTrue(True, 'Should never fail')
 
-    def test_updatePinClear(self):
+    def test_setLEDIntensityPhysicalAll(self):
+        '''
+        Set all LEDs on board 1 maximum intensity
+        '''
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
-        pl.updatePin(1, 1, True)
+        pl.setLEDIntensityPhysical(1, 'ALL', 255)
+        print 'Visually verify that all LEDs are at max intensity'
+        self.assertTrue(True, 'Should never fail')
+
+    '''
+    def test_updateLEDClear(self):
+        pl = PacLED(dryRun=self.dryRun)
+        pl.initializeAllPacLEDs()
+        pl.updateLED(1, 1, True)
         state = pl.getState()
-        self.assertEqual(state[1][0], 0x01, 'Pin clear prep of LSB wrong')
-        self.assertEqual(state[1][1], 0x00, 'Pin clear prep of MSB wrong')
-        pl.updatePin(1, 1, False)
+        self.assertEqual(state[1][0], 0x01, 'LED clear prep of LSB wrong')
+        self.assertEqual(state[1][1], 0x00, 'LED clear prep of MSB wrong')
+        pl.updateLED(1, 1, False)
         state = pl.getState()
-        self.assertEqual(state[1][0], 0x00, 'Pin clear of LSB wrong')
-        self.assertEqual(state[1][1], 0x00, 'Pin clear MSB wrong')
+        self.assertEqual(state[1][0], 0x00, 'LED clear of LSB wrong')
+        self.assertEqual(state[1][1], 0x00, 'LED clear MSB wrong')
 
     def test_updatePattern(self):
         pl = PacLED(dryRun=self.dryRun)
@@ -349,16 +304,19 @@ class TestController(unittest.TestCase):
     def test_updatePacLED(self):
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
-        pl.updatePin(1, 8, True)
+        pl.updateLED(1, 8, True)
         pl.updatePacLED(1)
         self.assertTrue(True, 'Visually inspect output to see that the board was updated')
+
+'''
+# KLRKLR
 
 
 ########
 # MAIN #
 ########
 if __name__ == '__main__':
-    logFormat = '%(levelname)s:%(asctime)s:PACDRIVE:%(module)s-%(lineno)d: %(message)s'
+    logFormat = '%(levelname)s:%(asctime)s:PACLED:%(module)s-%(lineno)d: %(message)s'
     logLevel = logging.INFO
     logging.basicConfig(format=logFormat, level=logLevel)
 
