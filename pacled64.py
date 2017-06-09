@@ -100,6 +100,7 @@ class PacLED:
             msg[0] = 0x80
         else:
             msg[0] = LED & 0x00ff
+
         msg[1] = intensity & 0x00ff
 
         self.sendCommand(board, msg)
