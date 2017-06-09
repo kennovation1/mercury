@@ -70,9 +70,14 @@ sudo apt-get install autoconf autogen intltool
 ./autogen.sh
 ./configure
 make
+
+sudo cp 21-ultimmarc.rules /etc/udev/rules.d/
+sudo reboot
+lsusb
+sudo lsusb -v
+
 cd src/umtool
-sudo ./umtool pacLED.json
-TODO: Do I still need to do something with 21-ultimarc.rules? See reanimate for what I did before.
+./umtool pacLED.json
 
 Should have done this earler...
 sudo apt-get update
@@ -88,11 +93,6 @@ git commit -m "Initial commit"
 git remote add origin git@github.com:kennovation1/mercury.git
 git push -u origin master
 
-# Device configuration
-sudo cp 21-ultimmarc.rules /etc/udev/rules.d/
-sudo reboot
-lsusb
-sudo lsusb -v
 
 # TODO
 * Line 128 in pacled64.py in updatePacLED in ctrl_transfer, I'm getting a "KeyError: 1" message. '1' is not a key value that I'm passing. This must be an internal error to cntrl_transfer. Seems that something is wrong with one of the constants passed to cntrl_transfer. Check katie-snow source...

@@ -90,7 +90,7 @@ class PacLED:
 
     def setLEDIntensityPhysical(self, board, LED, intensity):
         '''
-        Given a board (1-4) and an LED number (1-64), set the intensity (0-255)
+        Given a board (1-4) and an LED number (0-63), set the intensity (0-255)
         where 0 is off and 255 is full brightness.
         'Physical' means that we are using board and LED addressing instead of a
         logical 1-256 LED namespace.
@@ -132,11 +132,11 @@ class PacLED:
 def mapLogicalIdToBoardAndLED(logicalId):
     '''
     Maps a logical ID in the range of 1 to 256 to a board ID (1-4)
-    and a LED number (1-64)
+    and a LED number (0-63)
     Returns a tuple (boardId, LED)
     '''
     boardId = ((logicalId-1) / PACLED_LEDS) + 1
-    LED  = ((logicalId-1) % PACLED_LEDS) + 1
+    LED  = ((logicalId-1) % PACLED_LEDS)
     return (boardId, LED)
 
 def mapLabelToBoardAndLED(label):
@@ -145,70 +145,70 @@ def mapLabelToBoardAndLED(label):
     Returns a tuple (boardId, LED)
     '''
     labelMap = {
-            'sw1': (1,1),
-            'sw2': (1,2),
-            'sw3': (1,3),
-            'sw4': (1,4),
-            'sw5': (1,5),
-            'sw6': (1,6),
-            'sw7': (1,7),
-            'sw8': (1,8),
-            'sw9': (1,9),
-            'sw10': (1,10),
-            'sw11': (1,11),
-            'sw12': (1,12),
-            'sw13': (1,13),
-            'sw14': (1,14),
-            'sw15': (1,15),
-            'sw16': (1,16),
-            'sw17': (1,17),
-            'sw18': (1,18),
-            'sw19': (1,19),
-            'sw20': (1,20),
-            'sw21': (1,21),
-            'sw22': (1,22),
-            'sw23': (1,23),
-            'sw24': (1,24),
-            'sw25': (1,25),
-            'sw26': (1,26),
-            'sw27': (1,27),
-            'sw28': (1,28),
-            'sw29': (1,29),
-            'sw30': (1,30),
-            'sw31': (1,31),
-            'sw32': (1,32),
-            'sw33': (1,33),
-            'sw34': (1,34),
-            'sw35': (1,35),
-            'sw36': (1,36),
-            'sw37': (1,37),
-            'sw38': (1,38),
-            'sw39': (1,39),
-            'sw40': (1,40),
-            'sw41': (1,41),
-            'sw42': (1,42),
-            'sw43': (1,43),
-            'sw44': (1,44),
-            'sw45': (1,45),
-            'sw46': (1,46),
-            'sw47': (1,47),
-            'sw48': (1,48),
-            'sw49': (1,49),
-            'sw50': (1,50),
-            'sw51': (1,51),
-            'sw52': (1,52),
-            'sw53': (1,53),
-            'sw54': (1,54),
-            'sw55': (1,55),
-            'sw56': (1,56),
-            'sw57': (1,57),
-            'sw58': (1,58),
-            'sw59': (1,59),
-            'sw60': (1,60),
-            'sw61': (1,61),
-            'sw62': (1,62),
-            'sw63': (1,63),
-            'sw64': (1,64)
+            'sw1': (1,0),
+            'sw2': (1,1),
+            'sw3': (1,2),
+            'sw4': (1,3),
+            'sw5': (1,4),
+            'sw6': (1,5),
+            'sw7': (1,6),
+            'sw8': (1,7),
+            'sw9': (1,8),
+            'sw10': (1,9),
+            'sw11': (1,10),
+            'sw12': (1,11),
+            'sw13': (1,12),
+            'sw14': (1,13),
+            'sw15': (1,14),
+            'sw16': (1,15),
+            'sw17': (1,16),
+            'sw18': (1,17),
+            'sw19': (1,18),
+            'sw20': (1,19),
+            'sw21': (1,20),
+            'sw22': (1,21),
+            'sw23': (1,22),
+            'sw24': (1,23),
+            'sw25': (1,24),
+            'sw26': (1,25),
+            'sw27': (1,26),
+            'sw28': (1,27),
+            'sw29': (1,28),
+            'sw30': (1,29),
+            'sw31': (1,30),
+            'sw32': (1,31),
+            'sw33': (1,32),
+            'sw34': (1,33),
+            'sw35': (1,34),
+            'sw36': (1,35),
+            'sw37': (1,36),
+            'sw38': (1,37),
+            'sw39': (1,38),
+            'sw40': (1,39),
+            'sw41': (1,40),
+            'sw42': (1,41),
+            'sw43': (1,42),
+            'sw44': (1,43),
+            'sw45': (1,44),
+            'sw46': (1,45),
+            'sw47': (1,46),
+            'sw48': (1,47),
+            'sw49': (1,48),
+            'sw50': (1,49),
+            'sw51': (1,50),
+            'sw52': (1,51),
+            'sw53': (1,52),
+            'sw54': (1,53),
+            'sw55': (1,54),
+            'sw56': (1,55),
+            'sw57': (1,56),
+            'sw58': (1,57),
+            'sw59': (1,58),
+            'sw60': (1,59),
+            'sw61': (1,60),
+            'sw62': (1,61),
+            'sw63': (1,62),
+            'sw64': (1,63)
             }
     return labelMap[label]
 
@@ -220,7 +220,7 @@ class TestController(unittest.TestCase):
     def setUp(self):
         self.dryRun = False
 
-    @unittest.skip('Only run this if I change mapLogicalIdToBoardAndLED')
+    #@unittest.skip('Only run this if I change mapLogicalIdToBoardAndLED')
     def test_mapLogicalIdToBoardAndLED(self):
         print '\nTest of mapLogicalIdToBoardAndLED'
         # A few tests, but mostly just need to read the output when changing the code
@@ -229,9 +229,9 @@ class TestController(unittest.TestCase):
             print '%d\t%d\t%d' % (logicalId, boardId, LED)
         self.assertEqual(logicalId, 128, 'Unexpected logicalId value')
         self.assertEqual(boardId, 2, 'Unexpected boardId value')
-        self.assertEqual(LED, 64, 'Unexpected LED value')
+        self.assertEqual(LED, 63, 'Unexpected LED value')
 
-    @unittest.skip('Only run this if I change mapLabelToBoardAndLED')
+    #@unittest.skip('Only run this if I change mapLabelToBoardAndLED')
     def test_mapLabelToBoardAndLED(self):
         # A few tests, but mostly just need to read the output when changing the code
         print '\nTest of mapLabelToBoardAndLED'
@@ -242,7 +242,7 @@ class TestController(unittest.TestCase):
         (boardId, LED) = mapLabelToBoardAndLED('sw64')
         print '%s\t%d\t%d' % ('sw64', boardId, LED)
         self.assertEqual(boardId, 1, 'Unexpected boardId value')
-        self.assertEqual(LED, 64, 'Unexpected boardId value')
+        self.assertEqual(LED, 63, 'Unexpected boardId value')
 
     def test_initializeAllPacDrives(self):
         pl = PacLED(dryRun=self.dryRun)
@@ -259,8 +259,8 @@ class TestController(unittest.TestCase):
         '''
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
-        for LED in range(1, 65):
-            pl.setLEDIntensityPhysical(1, LED, LED*4 - 1)
+        for LED in range(0, 64):
+            pl.setLEDIntensityPhysical(1, LED, (LED+1)*4 - 1)
         print 'Visually verify that LED intensity ramps from LED 1 as dimmest to LED 64 as brightest'
         self.assertTrue(True, 'Should never fail')
 
