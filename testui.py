@@ -64,7 +64,7 @@ def processUserInput():
         elif command == 'rate' or command == 'r':
             rate = int(args[0])
             print 'Flash rate now: ' + str(rate)
-            pl.setLEDFade('ALL', rate, board=board)
+            pl.setLEDFlash('ALL', rate, board=board)
         elif command == 'even':
             pl.setLEDPattern('EVEN_ONLY', Intensity, board=board)
         elif command == 'odd':

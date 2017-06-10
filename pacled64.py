@@ -21,20 +21,26 @@ Function                            low byte map[0]     high byte map[1]
 ----------------------------------  -----------------   ----------------
 Set one LED to given intensity      LED num             intensity value
 Set all LEDs to given intensity     0x80                intensity value
-Set all LEDs in random mode         0x89                0
-Fade all LEDs at given rate         0x40                fade rate + PACLED_FADE_ALL_BASE
-Fade one LED at given rate          LED num +           fade rate
+Set all LEDs in random mode         0x89                0           TODO: Not sure what this is supposed to do
+Set flash rate for all LEDs         0x40                flash rate + PACLED_FADE_ALL_BASE
+Set flash rate for one LED          LED num +           flash rate
                                     PACLED_FADE_BASE
-Update board ID                     0xFE                newId + 240
+Update board ID                     0xFE                newId + 240 (only needed if multiple boards)
 
 LED num: 0-63
-fade rate: 0-3
+Flash rate: 0-3  (0:no flash, 1:2secs, 2:1sec, 3:0.5secs)
 intensity: 0-255
 PACLED_FADE_BASE: 64
 PACLED_FADE_ALL_BASE: 4
 
 When an LED is turned on, it remains on until intensity is set to a different
-level (or 0), or a fade command is issued.
+level (or 0) or the flash rate is changed.
+
+Changing the flash rate takes effect immediately. So, if an LED is solid on or flashing at some rate,
+issuing the command will start flashing the LED at the new rate.
+
+The 'FADE' term in the constants above (borrowed from Katie Snow) is confusing but works (I would have thought
+it would be called FLASH. Also, there is a way to set the fade time globally, but I don't yet know that command.
 '''
 import usb.core
 import usb.util
@@ -44,7 +50,7 @@ from time import sleep
 
 # USB constants
 PACLED_VENDOR = 0xD209
-PACLED_PRODUCT = 0x1401
+PACLED_PRODUCT = 0x1401 # This may not be true for multiple boards (next might be 1402, etc.)
 PACLED_DATA_SIZE = 2
 PACLED_REPORT = 0x03
 PACLED_VALUE = 0x0200
@@ -59,7 +65,7 @@ UM_REQUEST = 9
 
 # PacDrive characteristics
 PACLED_LEDS = 64
-MAX_BOARDS = 1
+MAX_BOARDS = 1      # Code not tested for >1
 
 '''
 Class represents a set of PacLED boards and their LED controls.
@@ -107,15 +113,15 @@ class PacLED:
 
         self.sendCommand(board, msg)
 
-    def setLEDFade(self, LED, fade, board=1):
-        ''' Fade all LEDs on the given board at the given rate (0-3) '''
+    def setLEDFlash(self, LED, rate, board=1):
+        ''' Flash all LEDs on the given board at the given rate (0-3) '''
         msg = [0,0]
         if LED is 'ALL':
             msg[0] = 0x40
-            msg[1] = fade + PACLED_FADE_ALL_BASE
+            msg[1] = rate + PACLED_FADE_ALL_BASE
         else:
             msg[0] = LED + PACLED_FADE_BASE
-            msg[1] = fade
+            msg[1] = rate
 
         self.sendCommand(board, msg)
 
@@ -286,16 +292,17 @@ class TestController(unittest.TestCase):
         sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
-    def test_setLEDFade(self):
-        print '\nVisually verify that all LEDs light and then fade at diff rates (every 4)\n'
+    def test_setLEDFlash(self):
+        print '\nVisually verify that all LEDs light and then flash at diff rates (every 4)\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
+        pl.setLEDFlash('ALL', 0)
         pl.setLEDIntensity('ALL', 255)
-        sleep(self.delay)
         for LED in range(0, 64, 4):
             for i in range(0, 4):
-                pl.setLEDFade(LED+i, i)
+                pl.setLEDFlash(LED+i, i)
         sleep(2 * self.delay)
+        pl.setLEDFlash('ALL', 0)
         self.assertTrue(True, 'Should never fail')
 
     def test_setLEDIntensityAll(self):
@@ -306,14 +313,16 @@ class TestController(unittest.TestCase):
         sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
-    def test_setLEDFadeAll(self):
-        print '\nVisually verify that all LEDs fade at same rate\n'
+    def test_setLEDFlashAll(self):
+        print '\nVisually verify that all LEDs flash at same rate\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
         pl.setLEDIntensity('ALL', 255)
-        sleep(self.delay)
-        pl.setLEDFade('ALL', 2)
-        sleep(self.delay)
+        for rate in range(4):
+            print '\tRate:', rate
+            pl.setLEDFlash('ALL', rate)
+            sleep(2*self.delay)
+        pl.setLEDFlash('ALL', 0)
         self.assertTrue(True, 'Should never fail')
 
     def test_setLEDPattern(self):
