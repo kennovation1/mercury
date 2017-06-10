@@ -18,18 +18,23 @@ BoardList = [1]
 def printHelp():
     print '''
       Commands:
-        q               Quit
         on <pinlist>       Turn on all pins in the comma separated list (no spaces). All on if no args.
-        intensity <value>  Set the default 'on' intensity (1-255)
-        board <board>      Set active board (for 'on' command)
         off <pinlist>      Turn of pins in list. All off if no args.
         even               Turn on even pins
         odd                Turn on odd pins
+
         chase <boardlist>  Rotate lamps in the specified boards in board list order. 1,2,3,4 if no args.
         rand <boardlist>   Random pattern in the specified boards in board. All boards if no args.
+
+        intensity <value>  Set the default 'on' intensity (1-255)
+        rate <flash rate>  Set a global flash rate (0:no flash, 1:2secs, 2:1sec, 3:0.5secs)
+        board <board>      Set active board (for 'on' command)
+        q                  Quit
     '''
 
 def processUserInput():
+    global Intensity
+
     printHelp()
     board = 1
     while True:
@@ -56,10 +61,14 @@ def processUserInput():
         elif command == 'intensity' or command == 'i':
             Intensity = int(args[0])
             print 'Intensity now: ' + str(Intensity)
+        elif command == 'rate' or command == 'r':
+            rate = int(args[0])
+            print 'Flash rate now: ' + str(rate)
+            pl.setLEDFade('ALL', rate, board=board)
         elif command == 'even':
-            pl.setLEDPattern('EVEN_ON', Intensity, board=board)
+            pl.setLEDPattern('EVEN_ONLY', Intensity, board=board)
         elif command == 'odd':
-            pl.setLEDPattern('ODD_ON', Intensity, board=board)
+            pl.setLEDPattern('ODD_ONLY', Intensity, board=board)
         elif command == 'chase':
             handleChase(args)
         elif command == 'rand':
