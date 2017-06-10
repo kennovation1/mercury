@@ -37,7 +37,8 @@ When an LED is turned on, it remains on until intensity is set to a different
 level (or 0) or the flash rate is changed.
 
 Changing the flash rate takes effect immediately. So, if an LED is solid on or flashing at some rate,
-issuing the command will start flashing the LED at the new rate.
+issuing the command will start flashing the LED at the new rate. However, if you set rate
+to 0, when the LED is in the off state, then it stays off. If it was on, then it stays on.
 
 The 'FADE' term in the constants above (borrowed from Katie Snow) is confusing but works (I would have thought
 it would be called FLASH. Also, there is a way to set the fade time globally, but I don't yet know that command.
