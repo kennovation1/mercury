@@ -96,7 +96,7 @@ class PacLED:
         'Physical' means that we are using board and LED addressing instead of a
         logical 1-256 LED namespace.
         '''
-        msg = {}
+        msg = [0,0]
         if LED is 'ALL':
             msg[0] = 0x80
         else:
@@ -104,6 +104,13 @@ class PacLED:
 
         msg[1] = intensity & 0x00ff
 
+        self.sendCommand(board, msg)
+
+    def setLEDRandom(self, board):
+        ''' Put board in random mode '''
+        msg = [0,0]
+        msg[0] = 0x89
+        msg[1] = 0
         self.sendCommand(board, msg)
 
     def setLEDpattern(self, board, pattern, intensity):
@@ -280,6 +287,14 @@ class TestController(unittest.TestCase):
             print '\t' + pattern + '\n'
             pl.setLEDpattern(1, pattern, 255)
             sleep(self.delay)
+        self.assertTrue(True, 'Should never fail')
+
+    def test_setLEDRandom(self):
+        print '\nVisually verify that board is in random mode\n'
+        pl = PacLED(dryRun=self.dryRun)
+        pl.initializeAllPacLEDs()
+        pl.setLEDRandom(1)
+        sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
 
