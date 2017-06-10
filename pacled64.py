@@ -101,9 +101,21 @@ class PacLED:
         if LED is 'ALL':
             msg[0] = 0x80
         else:
-            msg[0] = LED & 0x00ff
+            msg[0] = LED
 
-        msg[1] = intensity & 0x00ff
+        msg[1] = intensity
+
+        self.sendCommand(board, msg)
+
+    def setLEDFade(self, LED, fade, board=1):
+        ''' Fade all LEDs on the given board at the given rate (0-3) '''
+        msg = [0,0]
+        if LED is 'ALL':
+            msg[0] = 0x40
+            msg[1] = fade + PACLED_FADE_ALL_BASE
+        else:
+            msg[0] = LED + PACLED_FADE_BASE
+            msg[1] = fade
 
         self.sendCommand(board, msg)
 
@@ -116,7 +128,7 @@ class PacLED:
 
     def setLEDPattern(self, pattern, intensity, board=1):
         ''' Set the output state according to a pattern command '''
-        self.setLEDIntensity('ALL', 0, board)
+        self.setLEDIntensity('ALL', 0, board) # First, turn off all LEDs
 
         if pattern == 'ALL_ON':
             self.setLEDIntensity('ALL', intensity, board)
@@ -265,7 +277,7 @@ class TestController(unittest.TestCase):
         # for dev in pl.devs:
         #    usb.util.dispose_resources(dev)
 
-    def test_setLEDIntensity(self):
+    def test_setLEDIntensityRamp(self):
         print '\nVisually verify that LED intensity ramps from LED 1 as dimmest to LED 64 as brightest\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
@@ -274,11 +286,33 @@ class TestController(unittest.TestCase):
         sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
-    def test_setLEDIntensity(self):
+    def test_setLEDFade(self):
+        print '\nVisually verify that all LEDs light and then fade at diff rates (every 4)\n'
+        pl = PacLED(dryRun=self.dryRun)
+        pl.initializeAllPacLEDs()
+        pl.setLEDIntensity('ALL', 255)
+        sleep(self.delay)
+        for LED in range(0, 64, 4):
+            for i in range(0, 4):
+                pl.setLEDFade(LED+i, i)
+        sleep(2 * self.delay)
+        self.assertTrue(True, 'Should never fail')
+
+    def test_setLEDIntensityAll(self):
         print '\nVisually verify that all LEDs are at max intensity\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
         pl.setLEDIntensity('ALL', 255)
+        sleep(self.delay)
+        self.assertTrue(True, 'Should never fail')
+
+    def test_setLEDFadeAll(self):
+        print '\nVisually verify that all LEDs fade at same rate\n'
+        pl = PacLED(dryRun=self.dryRun)
+        pl.initializeAllPacLEDs()
+        pl.setLEDIntensity('ALL', 255)
+        sleep(self.delay)
+        pl.setLEDFade('ALL', 2)
         sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
