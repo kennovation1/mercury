@@ -92,12 +92,10 @@ class PacLED:
 	    dev.set_configuration() # Assumes that the default is the right one
 	    self.devs.append(dev)
 
-    def setLEDIntensityPhysical(self, LED, intensity, board=1):
+    def setLEDIntensity(self, LED, intensity, board=1):
         '''
         Given a board (1-4) and an LED number (0-63), set the intensity (0-255)
         where 0 is off and 255 is full brightness.
-        'Physical' means that we are using board and LED addressing instead of a
-        logical 1-256 LED namespace.
         '''
         msg = [0,0]
         if LED is 'ALL':
@@ -118,18 +116,18 @@ class PacLED:
 
     def setLEDPattern(self, pattern, intensity, board=1):
         ''' Set the output state according to a pattern command '''
-        self.setLEDIntensityPhysical('ALL', 0, board)
+        self.setLEDIntensity('ALL', 0, board)
 
         if pattern == 'ALL_ON':
-            self.setLEDIntensityPhysical('ALL', intensity, board)
+            self.setLEDIntensity('ALL', intensity, board)
         elif pattern == 'EVEN_ONLY':
             for i in range(0, PACLED_LEDS, 2):
-                self.setLEDIntensityPhysical(i, intensity, board)
+                self.setLEDIntensity(i, intensity, board)
         elif pattern == 'ODD_ONLY':
             for i in range(1, PACLED_LEDS, 2):
-                self.setLEDIntensityPhysical(i, intensity, board)
+                self.setLEDIntensity(i, intensity, board)
         else: # 'ALL_OFF'
-            self.setLEDIntensityPhysical('ALL', 0, board)
+            self.setLEDIntensity('ALL', 0, board)
 
     def sendCommand(self, board, msg):
         ''' Send a command to an attached PacLED. board is in range 1-N. '''
@@ -267,20 +265,20 @@ class TestController(unittest.TestCase):
         # for dev in pl.devs:
         #    usb.util.dispose_resources(dev)
 
-    def test_setLEDIntensityPhysicalRamp(self):
+    def test_setLEDIntensity(self):
         print '\nVisually verify that LED intensity ramps from LED 1 as dimmest to LED 64 as brightest\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
         for LED in range(0, 64):
-            pl.setLEDIntensityPhysical(LED, (LED+1)*4 - 1)
+            pl.setLEDIntensity(LED, (LED+1)*4 - 1)
         sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
-    def test_setLEDIntensityPhysicalAll(self):
+    def test_setLEDIntensity(self):
         print '\nVisually verify that all LEDs are at max intensity\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
-        pl.setLEDIntensityPhysical('ALL', 255)
+        pl.setLEDIntensity('ALL', 255)
         sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
