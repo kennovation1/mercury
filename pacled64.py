@@ -37,6 +37,7 @@ import usb.core
 import usb.util
 import unittest
 import logging
+from time import sleep
 
 # USB constants
 PACLED_VENDOR = 0xD209
@@ -72,10 +73,10 @@ class PacLED:
         '''
         Iterate over all USB-attached PacLEDs that are found and intialize each
         '''
-        self.devs = {}
+        self.devs = []
         if self.dryRun:
             for i in range(1, MAX_BOARDS+1):
-                self.devs[i] = 'Dummy device ' + str(i)
+                self.devs.append('Dummy device ' + str(i))
 	    return
 
         devsIter = usb.core.find(idVendor=PACLED_VENDOR, idProduct=PACLED_PRODUCT, find_all=True)
@@ -86,7 +87,7 @@ class PacLED:
 	    if dev.is_kernel_driver_active(0): # Okay to hardcode 0?
 	        dev.detach_kernel_driver(0)
 	    dev.set_configuration() # Assumes that the default is the right one
-	    self.devs[dev.bcdDevice] = dev
+	    self.devs.append(dev)
 
     def setLEDIntensityPhysical(self, board, LED, intensity):
         '''
@@ -105,25 +106,25 @@ class PacLED:
 
         self.sendCommand(board, msg)
 
-
-    def updatePattern(self, pattern):
+    def setLEDpattern(self, board, pattern, intensity):
         ''' Set the output state according to a pattern command '''
-        # TODO: write this
         if pattern == 'ALL_ON':
-            pass
+            self.setLEDIntensityPhysical(board, 'ALL', intensity)
         elif pattern == 'EVEN_ONLY':
-            pass
+            for i in range(0, PACLED_LEDS, 2):
+                self.setLEDIntensityPhysical(board, i, intensity)
         elif pattern == 'ODD_ONLY':
-            pass
+            for i in range(1, PACLED_LEDS, 2):
+                self.setLEDIntensityPhysical(board, i, intensity)
         else: # 'ALL_OFF'
-            pass
+            self.setLEDIntensityPhysical(board, 'ALL', 0)
 
     def sendCommand(self, board, msg):
-        ''' Send a command to an attached PacLED '''
+        ''' Send a command to an attached PacLED. board is in range 1-N. '''
         if self.dryRun:
             print 'dryRun: 0x%02x 0x%02x' % (msg[0], msg[1])
         else:
-            assert self.devs[board].ctrl_transfer(UM_REQUEST_TYPE, UM_REQUEST, PACLED_VALUE, PACLED_INDEX, msg) == PACLED_MESG_LENGTH
+            assert self.devs[board-1].ctrl_transfer(UM_REQUEST_TYPE, UM_REQUEST, PACLED_VALUE, PACLED_INDEX, msg) == PACLED_MESG_LENGTH
 
 # End class PacLED
 
@@ -219,8 +220,9 @@ def mapLabelToBoardAndLED(label):
 class TestController(unittest.TestCase):
     def setUp(self):
         self.dryRun = False
+        self.delay = 2 # Seconds to hold test to allow visual inspection
 
-    #@unittest.skip('Only run this if I change mapLogicalIdToBoardAndLED')
+    @unittest.skip('Only run this if I change mapLogicalIdToBoardAndLED')
     def test_mapLogicalIdToBoardAndLED(self):
         print '\nTest of mapLogicalIdToBoardAndLED'
         # A few tests, but mostly just need to read the output when changing the code
@@ -231,7 +233,7 @@ class TestController(unittest.TestCase):
         self.assertEqual(boardId, 2, 'Unexpected boardId value')
         self.assertEqual(LED, 63, 'Unexpected LED value')
 
-    #@unittest.skip('Only run this if I change mapLabelToBoardAndLED')
+    @unittest.skip('Only run this if I change mapLabelToBoardAndLED')
     def test_mapLabelToBoardAndLED(self):
         # A few tests, but mostly just need to read the output when changing the code
         print '\nTest of mapLabelToBoardAndLED'
@@ -254,63 +256,31 @@ class TestController(unittest.TestCase):
         #    usb.util.dispose_resources(dev)
 
     def test_setLEDIntensityPhysicalRamp(self):
-        '''
-        Set each of 64 LEDs on board 1 to an intensity proportial to the LED number
-        '''
+        print '\nVisually verify that LED intensity ramps from LED 1 as dimmest to LED 64 as brightest\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
         for LED in range(0, 64):
             pl.setLEDIntensityPhysical(1, LED, (LED+1)*4 - 1)
-        print 'Visually verify that LED intensity ramps from LED 1 as dimmest to LED 64 as brightest'
+        sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
     def test_setLEDIntensityPhysicalAll(self):
-        '''
-        Set all LEDs on board 1 maximum intensity
-        '''
+        print '\nVisually verify that all LEDs are at max intensity\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
         pl.setLEDIntensityPhysical(1, 'ALL', 255)
-        print 'Visually verify that all LEDs are at max intensity'
+        sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
-    '''
-    def test_updateLEDClear(self):
+    def test_setLEDpattern(self):
+        print '\nVisually verify that all LEDs went to...\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
-        pl.updateLED(1, 1, True)
-        state = pl.getState()
-        self.assertEqual(state[1][0], 0x01, 'LED clear prep of LSB wrong')
-        self.assertEqual(state[1][1], 0x00, 'LED clear prep of MSB wrong')
-        pl.updateLED(1, 1, False)
-        state = pl.getState()
-        self.assertEqual(state[1][0], 0x00, 'LED clear of LSB wrong')
-        self.assertEqual(state[1][1], 0x00, 'LED clear MSB wrong')
-
-    def test_updatePattern(self):
-        pl = PacLED(dryRun=self.dryRun)
-        pl.initializeAllPacLEDs()
-        pl.updatePattern('ODD_ONLY')
-        state = pl.getState()
-        # TODO fix next 2 lines
-        self.assertEqual(state[1][0], 0x55, 'Pattern update wrong')
-        self.assertEqual(state[1][1], 0x55, 'Pattern update wrong')
-
-    def test_updateAllPacLEDs(self):
-        pl = PacLED(dryRun=self.dryRun)
-        pl.initializeAllPacLEDs()
-        pl.updateAllPacLEDs()
-        self.assertTrue(True, 'Visually inspect output to see that all board were updated')
-
-    def test_updatePacLED(self):
-        pl = PacLED(dryRun=self.dryRun)
-        pl.initializeAllPacLEDs()
-        pl.updateLED(1, 8, True)
-        pl.updatePacLED(1)
-        self.assertTrue(True, 'Visually inspect output to see that the board was updated')
-
-'''
-# KLRKLR
+        for pattern in ('ALL_ON', 'EVEN_ONLY', 'ODD_ONLY', 'ALL_OFF'):
+            print '\t' + pattern + '\n'
+            pl.setLEDpattern(1, pattern, 255)
+            sleep(self.delay)
+        self.assertTrue(True, 'Should never fail')
 
 
 ########
@@ -318,7 +288,8 @@ class TestController(unittest.TestCase):
 ########
 if __name__ == '__main__':
     logFormat = '%(levelname)s:%(asctime)s:PACLED:%(module)s-%(lineno)d: %(message)s'
-    logLevel = logging.INFO
+    logLevel = logging.DEBUG
+    #logLevel = logging.INFO
     logging.basicConfig(format=logFormat, level=logLevel)
 
     unittest.main()

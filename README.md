@@ -94,5 +94,3 @@ git remote add origin git@github.com:kennovation1/mercury.git
 git push -u origin master
 
 
-# TODO
-* Line 128 in pacled64.py in updatePacLED in ctrl_transfer, I'm getting a "KeyError: 1" message. '1' is not a key value that I'm passing. This must be an internal error to cntrl_transfer. Seems that something is wrong with one of the constants passed to cntrl_transfer. Check katie-snow source...
