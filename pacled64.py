@@ -92,7 +92,7 @@ class PacLED:
 	    dev.set_configuration() # Assumes that the default is the right one
 	    self.devs.append(dev)
 
-    def setLEDIntensityPhysical(self, board, LED, intensity):
+    def setLEDIntensityPhysical(self, LED, intensity, board=1):
         '''
         Given a board (1-4) and an LED number (0-63), set the intensity (0-255)
         where 0 is off and 255 is full brightness.
@@ -109,27 +109,27 @@ class PacLED:
 
         self.sendCommand(board, msg)
 
-    def setLEDRandom(self, board):
+    def setLEDRandom(self, board=1):
         ''' Put board in random mode '''
         msg = [0,0]
         msg[0] = 0x89
         msg[1] = 0
         self.sendCommand(board, msg)
 
-    def setLEDPattern(self, board, pattern, intensity):
+    def setLEDPattern(self, pattern, intensity, board=1):
         ''' Set the output state according to a pattern command '''
-        self.setLEDIntensityPhysical(board, 'ALL', 0)
+        self.setLEDIntensityPhysical('ALL', 0, board)
 
         if pattern == 'ALL_ON':
-            self.setLEDIntensityPhysical(board, 'ALL', intensity)
+            self.setLEDIntensityPhysical('ALL', intensity, board)
         elif pattern == 'EVEN_ONLY':
             for i in range(0, PACLED_LEDS, 2):
-                self.setLEDIntensityPhysical(board, i, intensity)
+                self.setLEDIntensityPhysical(i, intensity, board)
         elif pattern == 'ODD_ONLY':
             for i in range(1, PACLED_LEDS, 2):
-                self.setLEDIntensityPhysical(board, i, intensity)
+                self.setLEDIntensityPhysical(i, intensity, board)
         else: # 'ALL_OFF'
-            self.setLEDIntensityPhysical(board, 'ALL', 0)
+            self.setLEDIntensityPhysical('ALL', 0, board)
 
     def sendCommand(self, board, msg):
         ''' Send a command to an attached PacLED. board is in range 1-N. '''
@@ -272,7 +272,7 @@ class TestController(unittest.TestCase):
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
         for LED in range(0, 64):
-            pl.setLEDIntensityPhysical(1, LED, (LED+1)*4 - 1)
+            pl.setLEDIntensityPhysical(LED, (LED+1)*4 - 1)
         sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
@@ -280,7 +280,7 @@ class TestController(unittest.TestCase):
         print '\nVisually verify that all LEDs are at max intensity\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
-        pl.setLEDIntensityPhysical(1, 'ALL', 255)
+        pl.setLEDIntensityPhysical('ALL', 255)
         sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
@@ -291,7 +291,7 @@ class TestController(unittest.TestCase):
         intensity = 64
         for pattern in ('ALL_ON', 'EVEN_ONLY', 'ODD_ONLY', 'ALL_OFF'):
             print '\t' + pattern + '\n'
-            pl.setLEDPattern(1, pattern, intensity)
+            pl.setLEDPattern(pattern, intensity)
             intensity += 64
             sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
@@ -300,7 +300,7 @@ class TestController(unittest.TestCase):
         print '\nVisually verify that board is in random mode\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
-        pl.setLEDRandom(1)
+        pl.setLEDRandom()
         sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
