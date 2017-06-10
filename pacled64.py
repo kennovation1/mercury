@@ -32,6 +32,9 @@ fade rate: 0-3
 intensity: 0-255
 PACLED_FADE_BASE: 64
 PACLED_FADE_ALL_BASE: 4
+
+When an LED is turned on, it remains on until intensity is set to a different
+level (or 0), or a fade command is issued.
 '''
 import usb.core
 import usb.util
@@ -113,8 +116,10 @@ class PacLED:
         msg[1] = 0
         self.sendCommand(board, msg)
 
-    def setLEDpattern(self, board, pattern, intensity):
+    def setLEDPattern(self, board, pattern, intensity):
         ''' Set the output state according to a pattern command '''
+        self.setLEDIntensityPhysical(board, 'ALL', 0)
+
         if pattern == 'ALL_ON':
             self.setLEDIntensityPhysical(board, 'ALL', intensity)
         elif pattern == 'EVEN_ONLY':
@@ -279,13 +284,15 @@ class TestController(unittest.TestCase):
         sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
-    def test_setLEDpattern(self):
+    def test_setLEDPattern(self):
         print '\nVisually verify that all LEDs went to...\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
+        intensity = 64
         for pattern in ('ALL_ON', 'EVEN_ONLY', 'ODD_ONLY', 'ALL_OFF'):
             print '\t' + pattern + '\n'
-            pl.setLEDpattern(1, pattern, 255)
+            pl.setLEDPattern(1, pattern, intensity)
+            intensity += 64
             sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
