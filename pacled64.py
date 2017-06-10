@@ -69,7 +69,7 @@ Unlike the PacDrives, no shadow state is maintained. Commands are directly
 written to the board.
 '''
 class PacLED:
-    def __init__(self, dryRun=True):
+    def __init__(self, dryRun=False):
         self.dryRun = dryRun
 
     def initializeAllPacLEDs(self):
