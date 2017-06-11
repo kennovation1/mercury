@@ -70,7 +70,7 @@ def processUserInput():
         elif command == 'telelight' or command == 't':
             handleTelelightCommand(board, args, True)
         elif command == 'Telelight' or command == 'T':
-            handleTelelightCommand(board, args, True)
+            handleTelelightCommand(board, args, False)
         elif command == 'rate' or command == 'r':
             rate = int(args[0])
             print 'Flash rate now: ' + str(rate)
@@ -105,7 +105,10 @@ def handleTelelightCommand(board, args, state):
         for telelight in args:
             pins = mapTelelightToPins(telelight)
             for pin in pins:
-                pl.setLEDIntensity(pin, Intensity, board=1)
+                if state:
+                    pl.setLEDIntensity(pin, Intensity, board=1)
+                else:
+                    pl.setLEDIntensity(pin, 0, board=1)
     else:
         if state:
             pl.setLEDPattern('ALL_ON', Intensity, board=1)
@@ -113,8 +116,8 @@ def handleTelelightCommand(board, args, state):
             pl.setLEDPattern('ALL_OFF', Intensity, board=1)
 
 def mapTelelightToPins(telelight):
-    left =  [ 31, 32, 33, 34, 35, 36, 37, 38, 39 ]
-    right = [ 46, 47, 48, 49, 50, 51, 52, 53, 54 ]
+    left = [ 46, 47, 48, 49, 50, 51, 52, 53, 54 ] # As viewed from front
+    right =  [ 31, 32, 33, 34, 35, 36, 37, 38, 39 ]
 
     mode = 'b' # Both
     if string.find(telelight, 'l') >= 0:
