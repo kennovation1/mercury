@@ -71,9 +71,9 @@ MAX_BOARDS = 1      # Code not tested for >1
 '''
 Class represents a set of PacLED boards and their LED controls.
 Boards are numbered starting at 1.
+LEDs are numbered starting at 1 as marked on PacLED silkscreen (note that commands to board are 0-based).
 
-Unlike the PacDrives, no shadow state is maintained. Commands are directly
-written to the board.
+Commands are directly written to the board (no local state is maintained).
 '''
 class PacLED:
     def __init__(self, dryRun=False):
@@ -101,33 +101,41 @@ class PacLED:
 
     def setLEDIntensity(self, LED, intensity, board=1):
         '''
-        Given a board (1-4) and an LED number (0-63), set the intensity (0-255)
+        Given a board (1-4) and an LED number (1-64), set the intensity (0-255)
         where 0 is off and 255 is full brightness.
+        If LED is 'ALL', apply to all LEDs on board.
         '''
         msg = [0,0]
         if LED is 'ALL':
             msg[0] = 0x80
         else:
-            msg[0] = LED
+            msg[0] = LED-1
 
         msg[1] = intensity
 
         self.sendCommand(board, msg)
 
     def setLEDFlash(self, LED, rate, board=1):
-        ''' Flash all LEDs on the given board at the given rate (0-3) '''
+        '''
+        Given a board (1-4) and an LED number (1-64), set the flash rate (0-3).
+        If LED is 'ALL', apply to all LEDs on board.
+        Flash rate: 0-3  (0:no flash, 1:2secs, 2:1sec, 3:0.5secs)
+        Setting the flash rate immediately affects the current state. Also, if setting to 0 (no flash),
+        then the state will stick to on or off depending on the state at the instant the command was given.
+        '''
         msg = [0,0]
         if LED is 'ALL':
             msg[0] = 0x40
             msg[1] = rate + PACLED_FADE_ALL_BASE
         else:
-            msg[0] = LED + PACLED_FADE_BASE
+            msg[0] = LED-1 + PACLED_FADE_BASE
             msg[1] = rate
 
         self.sendCommand(board, msg)
 
     def setLEDRandom(self, board=1):
         ''' Put board in random mode '''
+        # TODO: Note sure what this is supposed to do, and at present seems to do nothing
         msg = [0,0]
         msg[0] = 0x89
         msg[1] = 0
@@ -140,7 +148,7 @@ class PacLED:
         if pattern == 'ALL_ON':
             self.setLEDIntensity('ALL', intensity, board)
         elif pattern == 'EVEN_ONLY':
-            for i in range(0, PACLED_LEDS, 2):
+            for i in range(2, PACLED_LEDS+1, 2):
                 self.setLEDIntensity(i, intensity, board)
         elif pattern == 'ODD_ONLY':
             for i in range(1, PACLED_LEDS, 2):
@@ -162,83 +170,84 @@ class PacLED:
 def mapLogicalIdToBoardAndLED(logicalId):
     '''
     Maps a logical ID in the range of 1 to 256 to a board ID (1-4)
-    and a LED number (0-63)
+    and a LED number (1-64). Note that the logical LED number is given.
     Returns a tuple (boardId, LED)
     '''
     boardId = ((logicalId-1) / PACLED_LEDS) + 1
     LED  = ((logicalId-1) % PACLED_LEDS)
-    return (boardId, LED)
+    return (boardId, LED+1)
 
 def mapLabelToBoardAndLED(label):
     '''
     Map a text label for a LED to the board and LED number that is wired to that LED
-    Returns a tuple (boardId, LED)
+    Returns a tuple (boardId, LED). The returned LED number is a logical 1-64 number to
+    match board silkscren.
     '''
     labelMap = {
-            'led1': (1,0),
-            'led2': (1,1),
-            'led3': (1,2),
-            'led4': (1,3),
-            'led5': (1,4),
-            'led6': (1,5),
-            'led7': (1,6),
-            'led8': (1,7),
-            'led9': (1,8),
-            'led10': (1,9),
-            'led11': (1,10),
-            'led12': (1,11),
-            'led13': (1,12),
-            'led14': (1,13),
-            'led15': (1,14),
-            'led16': (1,15),
-            'led17': (1,16),
-            'led18': (1,17),
-            'led19': (1,18),
-            'led20': (1,19),
-            'led21': (1,20),
-            'led22': (1,21),
-            'led23': (1,22),
-            'led24': (1,23),
-            'led25': (1,24),
-            'led26': (1,25),
-            'led27': (1,26),
-            'led28': (1,27),
-            'led29': (1,28),
-            'led30': (1,29),
-            'led31': (1,30),
-            'led32': (1,31),
-            'led33': (1,32),
-            'led34': (1,33),
-            'led35': (1,34),
-            'led36': (1,35),
-            'led37': (1,36),
-            'led38': (1,37),
-            'led39': (1,38),
-            'led40': (1,39),
-            'led41': (1,40),
-            'led42': (1,41),
-            'led43': (1,42),
-            'led44': (1,43),
-            'led45': (1,44),
-            'led46': (1,45),
-            'led47': (1,46),
-            'led48': (1,47),
-            'led49': (1,48),
-            'led50': (1,49),
-            'led51': (1,50),
-            'led52': (1,51),
-            'led53': (1,52),
-            'led54': (1,53),
-            'led55': (1,54),
-            'led56': (1,55),
-            'led57': (1,56),
-            'led58': (1,57),
-            'led59': (1,58),
-            'led60': (1,59),
-            'led61': (1,60),
-            'led62': (1,61),
-            'led63': (1,62),
-            'led64': (1,63)
+            'led1': (1,1),
+            'led2': (1,2),
+            'led3': (1,3),
+            'led4': (1,4),
+            'led5': (1,5),
+            'led6': (1,6),
+            'led7': (1,7),
+            'led8': (1,8),
+            'led9': (1,9),
+            'led10': (1,10),
+            'led11': (1,11),
+            'led12': (1,12),
+            'led13': (1,13),
+            'led14': (1,14),
+            'led15': (1,15),
+            'led16': (1,16),
+            'led17': (1,17),
+            'led18': (1,18),
+            'led19': (1,19),
+            'led20': (1,20),
+            'led21': (1,21),
+            'led22': (1,22),
+            'led23': (1,23),
+            'led24': (1,24),
+            'led25': (1,25),
+            'led26': (1,26),
+            'led27': (1,27),
+            'led28': (1,28),
+            'led29': (1,29),
+            'led30': (1,30),
+            'led31': (1,31),
+            'led32': (1,32),
+            'led33': (1,33),
+            'led34': (1,34),
+            'led35': (1,35),
+            'led36': (1,36),
+            'led37': (1,37),
+            'led38': (1,38),
+            'led39': (1,39),
+            'led40': (1,40),
+            'led41': (1,41),
+            'led42': (1,42),
+            'led43': (1,43),
+            'led44': (1,44),
+            'led45': (1,45),
+            'led46': (1,46),
+            'led47': (1,47),
+            'led48': (1,48),
+            'led49': (1,49),
+            'led50': (1,50),
+            'led51': (1,51),
+            'led52': (1,52),
+            'led53': (1,53),
+            'led54': (1,54),
+            'led55': (1,55),
+            'led56': (1,56),
+            'led57': (1,57),
+            'led58': (1,58),
+            'led59': (1,59),
+            'led60': (1,60),
+            'led61': (1,61),
+            'led62': (1,62),
+            'led63': (1,63),
+            'led64': (1,64)
             }
     return labelMap[label]
 
@@ -260,7 +269,7 @@ class TestController(unittest.TestCase):
             print '%d\t%d\t%d' % (logicalId, boardId, LED)
         self.assertEqual(logicalId, 128, 'Unexpected logicalId value')
         self.assertEqual(boardId, 2, 'Unexpected boardId value')
-        self.assertEqual(LED, 63, 'Unexpected LED value')
+        self.assertEqual(LED, 64, 'Unexpected LED value')
 
     @unittest.skip('Only run this if I change mapLabelToBoardAndLED')
     def test_mapLabelToBoardAndLED(self):
@@ -273,7 +282,7 @@ class TestController(unittest.TestCase):
         (boardId, LED) = mapLabelToBoardAndLED('led64')
         print '%s\t%d\t%d' % ('led64', boardId, LED)
         self.assertEqual(boardId, 1, 'Unexpected boardId value')
-        self.assertEqual(LED, 63, 'Unexpected boardId value')
+        self.assertEqual(LED, 64, 'Unexpected boardId value')
 
     def test_initializeAllPacDrives(self):
         pl = PacLED(dryRun=self.dryRun)
@@ -288,8 +297,8 @@ class TestController(unittest.TestCase):
         print '\nVisually verify that LED intensity ramps from LED 1 as dimmest to LED 64 as brightest\n'
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
-        for LED in range(0, 64):
-            pl.setLEDIntensity(LED, (LED+1)*4 - 1)
+        for LED in range(1, 65):
+            pl.setLEDIntensity(LED, (LED)*4 - 1)
         sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
@@ -299,7 +308,7 @@ class TestController(unittest.TestCase):
         pl.initializeAllPacLEDs()
         pl.setLEDFlash('ALL', 0)
         pl.setLEDIntensity('ALL', 255)
-        for LED in range(0, 64, 4):
+        for LED in range(1, 65, 4):
             for i in range(0, 4):
                 pl.setLEDFlash(LED+i, i)
         sleep(2 * self.delay)
