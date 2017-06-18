@@ -93,3 +93,5 @@ git commit -m "Initial commit"
 git remote add origin git@github.com:kennovation1/mercury.git
 git push -u origin master
 
+# TODO
+Ramp speed only affects all???

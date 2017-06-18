@@ -19,23 +19,24 @@ BoardList = [1]
 def printHelp():
     print '''
       Commands:
-        on <pinlist>       Turn on all pins in the comma-separated list (no spaces). All on if no args.
-        off <pinlist>      Turn of pins in list. All off if no args.
-        even               Turn on even pins
-        odd                Turn on odd pins
+        (o) on <pinlist>       Turn on all pins in the comma-separated list (no spaces). All on if no args.
+        (f) off <pinlist>      Turn of pins in list. All off if no args.
+        even                   Turn on even pins
+        odd                    Turn on odd pins
 
-        t <telelight>      Turn on comma-separated list of telelights (no spaces). All on if no args.
-        T <telelight>      Turn off comma-separated list of telelights (no spaces). All off if no args.
-                           Use 'l' or 'r' suffix for left and right respectively.
-                           Telelights are numbered from 1 to N.
+        t <telelight>          Turn on comma-separated list of telelights (no spaces). All on if no args.
+        T <telelight>          Turn off comma-separated list of telelights (no spaces). All off if no args.
+                               Use 'l' or 'r' suffix for left and right respectively.
+                               Telelights are numbered from 1 to N.
 
-        chase <boardlist>  Rotate lamps in the specified boards in board list order. 1,2,3,4 if no args.
-        rand <boardlist>   Random pattern in the specified boards in board. All boards if no args.
+        chase <boardlist>       Rotate lamps in the specified boards in board list order. 1,2,3,4 if no args.
+        rand <boardlist> NOT WORKING Random full on/off pattern in the specified boards in board. All boards if no args.
 
-        intensity <value>  Set the default 'on' intensity (1-255)
-        rate <flash rate>  Set a global flash rate (0:no flash, 1:2secs, 2:1sec, 3:0.5secs)
-        board <board>      Set active board (for 'on' command)
-        q                  Quit
+        (i) intensity <value>  Set the default 'on' intensity (1-255)
+        (r) rate <flash rate>  Set a global flash rate (0:no flash, 1:2secs, 2:1sec, 3:0.5secs)
+        (s) speed <ramp speed> Set a global on/off ramp speed in 10s of milliseconds
+        (b) board <board>      Set active board (for 'on' and 'telelight' commands)
+        q                      Quit
     '''
 
 def processUserInput():
@@ -75,6 +76,10 @@ def processUserInput():
             rate = int(args[0])
             print 'Flash rate now: ' + str(rate)
             pl.setLEDFlash('ALL', rate, board=board)
+        elif command == 'speed' or command == 's':
+            speed = int(args[0])
+            print 'Ramp on/off speed now: ' + str(speed)
+            pl.setRampSpeed(speed, board=board)
         elif command == 'even':
             pl.setLEDPattern('EVEN_ONLY', Intensity, board=board)
         elif command == 'odd':
@@ -93,12 +98,15 @@ def processUserInput():
 def handleOnOffCommand(board, args, state):
     if args and len(args) > 0:
         for pin in args:
-            pl.setLEDIntensity(int(pin), Intensity, board=1)
+            if state:
+                pl.setLEDIntensity(int(pin), Intensity, board=1)
+            else:
+                pl.setLEDIntensity(int(pin), 0, board=1)
     else:
         if state:
             pl.setLEDPattern('ALL_ON', Intensity, board=1)
         else:
-            pl.setLEDPattern('ALL_OFF', Intensity, board=1)
+            pl.setLEDPattern('ALL_OFF', 0, board=1)
 
 def handleTelelightCommand(board, args, state):
     if args and len(args) > 0:
@@ -113,11 +121,11 @@ def handleTelelightCommand(board, args, state):
         if state:
             pl.setLEDPattern('ALL_ON', Intensity, board=1)
         else:
-            pl.setLEDPattern('ALL_OFF', Intensity, board=1)
+            pl.setLEDPattern('ALL_OFF', 0, board=1)
 
 def mapTelelightToPins(telelight):
-    left = [ 46, 47, 48, 49, 50, 51, 52, 53, 54 ] # As viewed from front
-    right =  [ 31, 32, 33, 34, 35, 36, 37, 38, 39 ]
+    left =   [ 16, 17, 18,  4,  5,  6,  7, 8, 24 ] # As viewed from front, top to bottom, main panel
+    right =  [  1,  2,  3, 19, 20, 21, 22, 23, 9 ]
 
     mode = 'b' # Both
     if string.find(telelight, 'l') >= 0:
@@ -151,7 +159,7 @@ def handleRandom(args):
         pin = random.randint(0, 63)
         pl.setLEDIntensity(pin, Intensity, board=board)
         time.sleep(0.25)
-    pl.setLEDPattern('ALL_OFF', Intensity, board=board)
+    pl.setLEDPattern('ALL_OFF', 0, board=board)
     print 'Rand done'
 
 def handleChase(args):
@@ -166,14 +174,14 @@ def handleChase(args):
     for i in range(2):
         for b in boards:
             board = int(b)
-            for pin in range(0, 64):
+            for pin in range(1, 65):
                 pl.setLEDIntensity(lastPin, 0, board=lastBoard)
                 pl.setLEDIntensity(pin, Intensity, board=board)
                 lastBoard = board
                 lastPin = pin
                 time.sleep(0.25)
     pl.setLEDIntensity(lastPin, 0, board=lastBoard)
-    pl.setLEDPattern('ALL_OFF', Intensity, board=board)
+    pl.setLEDPattern('ALL_OFF', 0, board=board)
     print 'Chase done'
 
 ########

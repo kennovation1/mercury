@@ -16,15 +16,16 @@ Author: Ken Robbins
 Thanks to Robert Abram and Katie Snow (Ultimarc-linux) whose source code provided insight into PacLED64
 programming and for their #define values for PACLED*
 
-Command interface design:
-Function                            low byte map[0]     high byte map[1]
+Command interface design (see separate spreadsheet for full command set):
+Function                            high byte map[0]    low byte map[1]
 ----------------------------------  -----------------   ----------------
 Set one LED to given intensity      LED num             intensity value
 Set all LEDs to given intensity     0x80                intensity value
-Set all LEDs in random mode         0x89                0           TODO: Not sure what this is supposed to do
+Set all LEDs to random full on/off  0x89                0
 Set flash rate for all LEDs         0x40                flash rate + PACLED_FADE_ALL_BASE
 Set flash rate for one LED          LED num +           flash rate
                                     PACLED_FADE_BASE
+Set off/on ramp speed               0xC0                tens of milliseconds
 Update board ID                     0xFE                newId + 240 (only needed if multiple boards)
 
 LED num: 0-63
@@ -134,11 +135,17 @@ class PacLED:
         self.sendCommand(board, msg)
 
     def setLEDRandom(self, board=1):
-        ''' Put board in random mode '''
-        # TODO: Note sure what this is supposed to do, and at present seems to do nothing
+        ''' Set all LEDs to a random full on/off pattern on the specified board'''
         msg = [0,0]
         msg[0] = 0x89
         msg[1] = 0
+        self.sendCommand(board, msg)
+
+    def setRampSpeed(self, speed, board=1):
+        ''' Set the off/on LED ramp speed (in tens of milliseconds) on the specified board '''
+        msg = [0,0]
+        msg[0] = 0xC0
+        msg[1] = speed
         self.sendCommand(board, msg)
 
     def setLEDPattern(self, pattern, intensity, board=1):
@@ -320,6 +327,18 @@ class TestController(unittest.TestCase):
         pl = PacLED(dryRun=self.dryRun)
         pl.initializeAllPacLEDs()
         pl.setLEDIntensity('ALL', 255)
+        sleep(self.delay)
+        self.assertTrue(True, 'Should never fail')
+
+    def test_setRampSpeed(self):
+        print '\nVisually verify that all LEDs turn on very slowly (2 secs) and off fast (0.25 secs)\n'
+        pl = PacLED(dryRun=self.dryRun)
+        pl.initializeAllPacLEDs()
+        pl.setRampSpeed(200) # 2 seconds
+        pl.setLEDIntensity('ALL', 255)
+        sleep(self.delay)
+        pl.setRampSpeed(25)  # 0.5 seconds
+        pl.setLEDIntensity('ALL', 0)
         sleep(self.delay)
         self.assertTrue(True, 'Should never fail')
 
