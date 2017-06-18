@@ -36,6 +36,7 @@ def printHelp():
         (r) rate <flash rate>  Set a global flash rate (0:no flash, 1:2secs, 2:1sec, 3:0.5secs)
         (s) speed <ramp speed> Set a global on/off ramp speed in 10s of milliseconds
         (b) board <board>      Set active board (for 'on' and 'telelight' commands)
+        special                Custom command
         q                      Quit
     '''
 
@@ -91,6 +92,8 @@ def processUserInput():
         elif command == 'board' or command == 'b':
             board = int(args[0])
             print 'Active board now: ' + str(board)
+        elif command == 'special':
+            handleSpecial(args)
         else:
             print 'Unknown command'
             printHelp()
@@ -183,6 +186,25 @@ def handleChase(args):
     pl.setLEDIntensity(lastPin, 0, board=lastBoard)
     pl.setLEDPattern('ALL_OFF', 0, board=board)
     print 'Chase done'
+
+def handleSpecial(args):
+    print 'Special: Runs forever. Control-C to quit'
+
+    last = 9
+    for i in range(10):
+        for telelight in range(1, 10):
+            handleTelelightCommand(1, [str(last)], 0)
+            handleTelelightCommand(1, [str(telelight)], Intensity)
+            last = telelight
+            time.sleep(0.25)
+
+    while(True):
+        state = random.choice([Intensity, Intensity, 0])
+        telelight = random.randint(1, 9)
+        print telelight, state
+        handleTelelightCommand(1, [str(telelight)], state)
+        time.sleep(0.25)
+
 
 ########
 # MAIN #
