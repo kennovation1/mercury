@@ -86,6 +86,11 @@ sudo apt-get dist-upgrade
 
 Instead of using the C library above, just write my own Python code. See pacled64.py.
 
+# IPAC-4
+* I had problems using pyusb to read the IPAC-4 ("Resource Busy"). Instead use python-evdev
+* sudo pip install evdev
+* See ipac.py
+
 # Git
 git init
 git add README.md 
