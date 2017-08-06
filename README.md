@@ -12,7 +12,29 @@ sudo apt-get install i2c-tools
 * Use advanced options to
   * Set hostname to: rpi-mercury-1 (change in static router config too)
   * Enabled I2C
+  * Enabled SPI (for experimenting with PaPiRus eInk display)
 * Reboot
+
+```
+# The following was executed to test the PaPiRus eInk display. This is not normally needed since
+# I don't expect to use the display.
+apt-get install git -y
+apt-get install python-imaging -y
+apt-get install python-smbus -y
+apt-get install bc i2c-tools -y
+
+# enable SPI and I2C
+raspi-config nonint do_spi 0
+raspi-config nonint do_i2c 0
+
+# For eInk testing (not needed for Mercury)
+git clone https://github.com/PiSupply/PaPiRus.git
+cd PaPiRus
+python setup.py install    # Install PaPirRus python library
+
+sudo pip install pypng
+sudo pip install pyqrcode
+```
 
 ```
 sudo i2cdetect -y 1
