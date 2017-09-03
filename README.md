@@ -121,4 +121,14 @@ git remote add origin git@github.com:kennovation1/mercury.git
 git push -u origin master
 
 # TODO
-Ramp speed only affects all???
+* Ramp speed only affects all???
+* ipac4.py doesn't work anymore?
+* For pacLED, until I get a working board, block bad LEDS in software
+
+# Usage
+* ssh pi@192.18.1.12
+* cd mercury
+* python testui.py # To get interactive session to control LEDS
+  * Right/main panel telelights are 1-9 (top to bottom)
+  * Left panel telelights are 10-19 (don't use 10 and 11 for now)
+  * Abort is pin 36
