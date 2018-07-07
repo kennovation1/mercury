@@ -1,6 +1,11 @@
+# Status
+- ***See the ./working2018 sub-directory for a clean and more organized re-start of the project***
+
+# Connection info
 ssh pi@192.168.1.12
 raspberry
 
+# All else...
 ```
 # Needed for I2C for servo control
 # These seem to have already been installed
@@ -108,11 +113,6 @@ sudo apt-get dist-upgrade
 
 Instead of using the C library above, just write my own Python code. See pacled64.py.
 
-# IPAC-4
-* I had problems using pyusb to read the IPAC-4 ("Resource Busy"). Instead use python-evdev
-* sudo pip install evdev
-* See ipac.py
-
 # Git
 git init
 git add README.md 
@@ -122,7 +122,6 @@ git push -u origin master
 
 # TODO
 * Ramp speed only affects all???
-* ipac4.py doesn't work anymore?
 * For pacLED, until I get a working board, block bad LEDS in software
 
 # Usage
