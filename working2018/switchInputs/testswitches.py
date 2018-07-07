@@ -18,7 +18,7 @@ def handleEvent(key, state, timestamp):
     states = ('UP', 'DOWN', 'HOLD')
     if state < 2:
         print '%f %d %s' % (timestamp, key, states[state])
-        printSwitchInfo(key)
+        printSwitchInfo(key, state)
 
 def showDevices():
     print('\nDiscovered devices:')

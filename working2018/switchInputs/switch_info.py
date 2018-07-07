@@ -161,7 +161,7 @@ switches = {
             'mainLabel': 'ISOL BTRY',
             'offLabel': 'NORM',
             'offPosition': 'RIGHT',
-            'onLabel': 'ON',
+            'onLabel': 'STBY',
             'onPosition': 'LEFT'
             },
             
@@ -293,31 +293,42 @@ def getSwitchInfo(key):
     '''
     return switches.get(key)
 
-def printSwitchInfo(key):
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+
+def printSwitchInfo(key, state):
     ''' Pretty print switch info '''
     swinfo = getSwitchInfo(key)
     if swinfo is None:
-        print 'Missing mapping'
-        print """
-        %d: {
-            'ipac4': 'KLR',
-            'type': 'SPDT',
-            'mainLabel': 'KLR',
-            'offLabel': 'KLR',
-            'offPosition': 'RIGHT',
-            'onLabel': 'KLR',
-            'onPosition': 'LEFT'
-            },
-            """ % (key)
+        print color.RED + 'Missing mapping for key: ' + str(key) + color.END
     else:
-        print '{} {} {}:   {}   off:{}/{} on:{}/{}'.format(key,
+        if state == 0:
+            off = color.BOLD + color.PURPLE + 'off'
+            on = color.END + 'on'
+        else:
+            off = 'off'
+            on = color.BOLD + color.BLUE + 'on'
+
+        print '{} {} {}:   {}   {}:{}/{} {}:{}/{}{}'.format(key,
                 swinfo['ipac4'],
                 swinfo['type'],
                 swinfo['mainLabel'],
+                off,
                 swinfo['offLabel'],
                 swinfo['offPosition'],
+                on,
                 swinfo['onLabel'],
-                swinfo['onPosition']
+                swinfo['onPosition'],
+                color.END
                 )
 
 
@@ -329,7 +340,10 @@ if __name__ == '__main__':
     print getSwitchInfo(64)
     print getSwitchInfo(65)
     print getSwitchInfo(66)
-    printSwitchInfo(64)
-    printSwitchInfo(65)
-    printSwitchInfo(66)
+    printSwitchInfo(64, 0)
+    printSwitchInfo(64, 1)
+    printSwitchInfo(65, 0)
+    printSwitchInfo(66, 0)
+    printSwitchInfo(65, 1)
+    printSwitchInfo(66, 1)
 

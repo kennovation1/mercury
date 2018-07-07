@@ -32,4 +32,6 @@ Hold events are spaced at a 40ms interval when called in a tight loop on one inp
 - sudo pip install evdev
 - I had originally tried to use pyusb to read the IPAC-4 but got a "Resource Busy" error. This is why I moved to evdev.
 
-
+# Testing
+- python testinput.py 
+  - Toggle buttons and observe printout to screen for each state change. Continuous hold events are not printed.
