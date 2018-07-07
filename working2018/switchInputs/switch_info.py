@@ -13,6 +13,7 @@ Key meanings:
     
     Positions must be one of: 'LEFT', 'RIGHT', 'UP', 'DOWN', 'CENTER'. CENTER is only used for SPDT switches.
 '''
+
 switches = {
         38: {
             'ipac4': 'KLR',
@@ -24,17 +25,127 @@ switches = {
             'onPosition': 'LEFT'
             },
 
-        200: {
+        36: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'CABIN PRESS - AUDIO',
+            'offLabel': 'TONE',
+            'offPosition': 'RIGHT',
+            'onLabel': 'OFF',
+            'onPosition': 'LEFT'
+            },
+            
+        23: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'O2 QUAN - AUDIO',
+            'offLabel': 'TONE',
+            'offPosition': 'RIGHT',
+            'onLabel': 'OFF',
+            'onPosition': 'LEFT'
+            },
+            
+        37: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'O2 EMER',
+            'offLabel': 'TONE',
+            'offPosition': 'RIGHT',
+            'onLabel': 'OFF',
+            'onPosition': 'LEFT'
+            },
+            
+        97: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'EXCESS SUIT H2O - AUDIO',
+            'offLabel': 'TONE',
+            'offPosition': 'RIGHT',
+            'onLabel': 'OFF',
+            'onPosition': 'LEFT'
+            },
+            
+        54: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'EXCESS CABIN H2O - AUDIO',
+            'offLabel': 'TONE',
+            'offPosition': 'RIGHT',
+            'onLabel': 'OFF',
+            'onPosition': 'LEFT'
+            },
+            
+        28: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'FUEL QUAN - AUDIO',
+            'offLabel': 'TONE',
+            'offPosition': 'RIGHT',
+            'onLabel': 'OFF',
+            'onPosition': 'LEFT'
+            },
+            
+        24: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'RETRO WARN - AUDIO',
+            'offLabel': 'TONE',
+            'offPosition': 'RIGHT',
+            'onLabel': 'OFF',
+            'onPosition': 'LEFT'
+            },
+            
+        63: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'RETRO RESET - AUDIO',
+            'offLabel': 'TONE',
+            'offPosition': 'RIGHT',
+            'onLabel': 'OFF',
+            'onPosition': 'LEFT'
+            },
+
+        65: {
+            'ipac4': 'KLR',
+            'type': 'SPDT',
+            'mainLabel': 'SUIT FAN',
+            'offLabel': 'No 1',
+            'offPosition': 'CENTER',
+            'onLabel': 'NORM',
+            'onPosition': 'RIGHT'
+            },
+            
+        66: {
+            'ipac4': 'KLR',
+            'type': 'SPDT',
+            'mainLabel': 'SUIT FAN',
+            'offLabel': 'No 1',
+            'offPosition': 'CENTER',
+            'onLabel': 'No 2',
+            'onPosition': 'LEFT'
+            },
+            
+        4: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'CABIN FAN',
+            'offLabel': 'NORM',
+            'offPosition': 'RIGHT',
+            'onLabel': 'OFF',
+            'onPosition': 'LEFT'
+            },
+            
+        8: {
             'ipac4': 'KLR',
             'type': 'SPDT',
             'mainLabel': 'ASCS AC BUS',
             'offLabel': 'OFF',
             'offPosition': 'CENTER',
-            'onLabel': 'RIGHT',
+            'onLabel': 'NORM',
             'onPosition': 'RIGHT'
             },
-
-        201: {
+            
+        106: {
             'ipac4': 'KLR',
             'type': 'SPDT',
             'mainLabel': 'ASCS AC BUS',
@@ -42,10 +153,138 @@ switches = {
             'offPosition': 'CENTER',
             'onLabel': 'STBY',
             'onPosition': 'LEFT'
-            }
+            },
+            
+        108: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'ISOL BTRY',
+            'offLabel': 'NORM',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ON',
+            'onPosition': 'LEFT'
+            },
+            
+        105: {
+            'ipac4': 'KLR',
+            'type': 'SPDT',
+            'mainLabel': 'AMMETER',
+            'offLabel': 'PWR OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'NORM',
+            'onPosition': 'RIGHT'
+            },
 
-
-        }
+        103: {
+            'ipac4': 'KLR',
+            'type': 'SPDT',
+            'mainLabel': 'AMMETER',
+            'offLabel': 'PWR OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'BYPASS',
+            'onPosition': 'LEFT'
+            },
+            
+        29: {
+            'ipac4': 'KLR',
+            'type': 'SPDT',
+            'mainLabel': 'FANS AC BUS',
+            'offLabel': 'OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'NORM',
+            'onPosition': 'RIGHT'
+            },
+            
+        56: {
+            'ipac4': 'KLR',
+            'type': 'SPDT',
+            'mainLabel': 'FANS AC BUS',
+            'offLabel': 'OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'STBY',
+            'onPosition': 'LEFT'
+            },
+            
+        44: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'AC VOLTS',
+            'offLabel': 'FANS',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ASCS',
+            'onPosition': 'LEFT'
+            },
+            
+        42: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'AUDIO BUS',
+            'offLabel': 'NORM',
+            'offPosition': 'RIGHT',
+            'onLabel': 'EMER',
+            'onPosition': 'LEFT'
+            },
+            
+        57: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'INLET VALVE PWR',
+            'offLabel': 'NORM',
+            'offPosition': 'RIGHT',
+            'onLabel': 'BYPASS',
+            'onPosition': 'LEFT'
+            },
+            
+        2: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'BEACON',
+            'offLabel': 'CONT',
+            'offPosition': 'RIGHT',
+            'onLabel': 'GRND COMD',
+            'onPosition': 'LEFT'
+            },
+            
+        46: {
+            'ipac4': 'KLR',
+            'type': 'SPDT',
+            'mainLabel': 'TRANSMIT',
+            'offLabel': 'OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'UHF',
+            'onPosition': 'RIGHT'
+            },
+            
+        47: {
+            'ipac4': 'KLR',
+            'type': 'SPDT',
+            'mainLabel': 'TRANSMIT',
+            'offLabel': 'OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'HF',
+            'onPosition': 'LEFT'
+            },
+            
+        45: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'UHF SELECT',
+            'offLabel': 'HI PWR',
+            'offPosition': 'RIGHT',
+            'onLabel': 'LO PWR',
+            'onPosition': 'LEFT'
+            },
+            
+        64: {
+            'ipac4': 'KLR',
+            'type': 'SPST',
+            'mainLabel': 'O2 FLOW',
+            'offLabel': 'PRIM',
+            'offPosition': 'RIGHT',
+            'onLabel': 'SEC.',
+            'onPosition': 'LEFT'
+            },
+}
 
 def getSwitchInfo(key):
     '''
@@ -86,10 +325,11 @@ def printSwitchInfo(key):
 # MAIN #
 ########
 if __name__ == '__main__':
-    print getSwitchInfo(400)
-    print getSwitchInfo(38)
-    print getSwitchInfo(200)
-    print getSwitchInfo(201)
-    printSwitchInfo(38)
-    printSwitchInfo(400)
-    printSwitchInfo(500)
+    print getSwitchInfo(1000)
+    print getSwitchInfo(64)
+    print getSwitchInfo(65)
+    print getSwitchInfo(66)
+    printSwitchInfo(64)
+    printSwitchInfo(65)
+    printSwitchInfo(66)
+
