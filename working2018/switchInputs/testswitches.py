@@ -17,7 +17,7 @@ def handleEvent(key, state, timestamp):
 
     states = ('UP', 'DOWN', 'HOLD')
     if state < 2:
-        print '%f %d %s' % (timestamp, key, states[state])
+        #print '%f %d %s' % (timestamp, key, states[state])
         printSwitchInfo(key, state)
 
 def showDevices():
@@ -41,7 +41,7 @@ def eventLoop():
     devices = map(evdev.InputDevice, ('/dev/input/event0', '/dev/input/event1', '/dev/input/event2', '/dev/input/event3'))
     devices = {dev.fd: dev for dev in devices}
 
-    print('\nEvent wait loop started...\n')
+    print('\nEvent wait loop started (control-C to stop)...\n')
     while True:
         r, w, x = select(devices, [], [])
         for fd in r:

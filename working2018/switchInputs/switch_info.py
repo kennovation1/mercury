@@ -305,7 +305,25 @@ class color:
    UNDERLINE = '\033[4m'
    END = '\033[0m'
 
-def printSwitchInfo(key, state):
+def printSwitchInfo(key, state, debug=False):
+    ''' Pretty print switch info '''
+    if debug:
+        printSwitchInfoDebug(key, state)
+        return
+
+    swinfo = getSwitchInfo(key)
+    if swinfo is None:
+        print color.RED + 'Missing mapping for key: ' + str(key) + color.END
+    else:
+        if state == 0:
+            label = swinfo['offLabel']
+            position = color.BOLD + color.BLUE + swinfo['offLabel'] + color.END
+        else:
+            position = color.BOLD + color.BLUE + swinfo['onLabel'] + color.END
+
+        print color.BOLD + color.DARKCYAN + swinfo['mainLabel'] + color.END + ' -> ' + position
+
+def printSwitchInfoDebug(key, state):
     ''' Pretty print switch info '''
     swinfo = getSwitchInfo(key)
     if swinfo is None:
@@ -340,10 +358,11 @@ if __name__ == '__main__':
     print getSwitchInfo(64)
     print getSwitchInfo(65)
     print getSwitchInfo(66)
-    printSwitchInfo(64, 0)
-    printSwitchInfo(64, 1)
-    printSwitchInfo(65, 0)
-    printSwitchInfo(66, 0)
-    printSwitchInfo(65, 1)
-    printSwitchInfo(66, 1)
+    for debug in (False, True):
+        printSwitchInfo(64, 0, debug)
+        printSwitchInfo(64, 1, debug)
+        printSwitchInfo(65, 0, debug)
+        printSwitchInfo(66, 0, debug)
+        printSwitchInfo(65, 1, debug)
+        printSwitchInfo(66, 1, debug)
 
