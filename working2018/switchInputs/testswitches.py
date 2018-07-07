@@ -6,6 +6,7 @@
 
 import evdev
 from select import select
+from switch_info import getSwitchInfo, printSwitchInfo
 
 def handleEvent(key, state, timestamp):
     '''
@@ -14,8 +15,10 @@ def handleEvent(key, state, timestamp):
     timestamp is time of the event as a float
     '''
 
-    states = ['UP', 'DOWN', 'HOLD']
-    print '%f %d %s' % (timestamp, key, states[state])
+    states = ('UP', 'DOWN', 'HOLD')
+    if state < 2:
+        print '%f %d %s' % (timestamp, key, states[state])
+        printSwitchInfo(key)
 
 def showDevices():
     print('\nDiscovered devices:')
