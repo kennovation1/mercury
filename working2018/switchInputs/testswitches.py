@@ -15,7 +15,7 @@ def handleEvent(key, state, timestamp):
     '''
 
     states = ['UP', 'DOWN', 'HOLD']
-    print timestamp, 'Key=' + str(key) + ' State=' + states[state]
+    print '%f %d %s' % (timestamp, key, states[state])
 
 def showDevices():
     print('\nDiscovered devices:')
