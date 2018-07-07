@@ -5,32 +5,48 @@
 ######################################################################
 
 import evdev
-from time import time
+from select import select
 
-def handleEvent(key, state):
+def handleEvent(key, state, timestamp):
     '''
-    key is a byte that represents which which generated the event
+    key is a byte that represents which key/switch generated the event
     state is 0 for up, 1, for down, 2 for hold
+    timestamp is time of the event as a float
     '''
 
     states = ['UP', 'DOWN', 'HOLD']
-    print time(), 'Key=' + str(key) + ' State=' + states[state]
+    print timestamp, 'Key=' + str(key) + ' State=' + states[state]
 
 def showDevices():
     print('\nDiscovered devices:')
     devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
     if len(devices) != 4:
-        print('Expected 4 input devices, but found ' + len(devices))
+        print('Expected 4 input devices, but found ' + str(len(devices)))
     for device in devices:
         print(device.path, device.name, device.phys)
         if device.name != 'Ultimarc Ultimarc':
-            print('    WARNING: Excpected device name to be "Ultimarc Ultimarc"')
+            print('    WARNING: Expected device name to be "Ultimarc Ultimarc"')
     ''' Expect printed output to be: 
-        ('/dev/input/event4', 'Ultimarc Ultimarc', 'usb-3f980000.usb-1.3/input3')
-        ('/dev/input/event3', 'Ultimarc Ultimarc', 'usb-3f980000.usb-1.3/input2')
-        ('/dev/input/event2', 'Ultimarc Ultimarc', 'usb-3f980000.usb-1.3/input1')
-        ('/dev/input/event1', 'Ultimarc Ultimarc', 'usb-3f980000.usb-1.3/input0')
+        ('/dev/input/event3', 'Ultimarc Ultimarc', 'usb-3f980000.usb-1.3/input3')
+        ('/dev/input/event2', 'Ultimarc Ultimarc', 'usb-3f980000.usb-1.3/input2')
+        ('/dev/input/event1', 'Ultimarc Ultimarc', 'usb-3f980000.usb-1.3/input1')
+        ('/dev/input/event0', 'Ultimarc Ultimarc', 'usb-3f980000.usb-1.3/input0')
     '''
+
+def eventLoop():
+    # A mapping of file descriptors (integers) to InputDevice instances.
+    devices = map(evdev.InputDevice, ('/dev/input/event0', '/dev/input/event1', '/dev/input/event2', '/dev/input/event3'))
+    devices = {dev.fd: dev for dev in devices}
+
+    print('\nEvent wait loop started...\n')
+    while True:
+        r, w, x = select(devices, [], [])
+        for fd in r:
+            for event in devices[fd].read():
+                if event.type == evdev.ecodes.EV_KEY:
+                    e = evdev.categorize(event)
+                    handleEvent(e.scancode, e.keystate, event.timestamp())
+
 
 ################
 # Main
@@ -38,34 +54,5 @@ def showDevices():
 
 showDevices()
 
-def testAsync():
-    from selectors import DefaultSelector, EVENT_READ
-    selector = selectors.DefaultSelector()
+eventLoop()
 
-    for i in range(1,4):
-        inputDevice = evdev.InputDevice('/dev/input/event' + str(i))
-        # This works because InputDevice has a `fileno()` method.
-        selector.register(inputDevice, selectors.EVENT_READ)
-
-    while True:
-        for key, mask in selector.select():
-            device = key.fileobj
-            for event in device.read():
-                print(event)
-
-
-# TODO: Need to update to read from all four devices concurrently ...
-device = evdev.InputDevice('/dev/input/event1')
-
-print('\nEvent wait loop started...\n')
-for event in device.read_loop():
-    if event.type == evdev.ecodes.EV_KEY:
-        e = evdev.categorize(event)
-        '''
-        print event
-        print e
-        print e.keycode
-        print e.keystate
-        print e.scancode
-        '''
-        handleEvent(e.scancode, e.keystate)
