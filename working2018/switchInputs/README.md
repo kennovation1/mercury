@@ -26,7 +26,6 @@ Hold events are spaced at a 40ms interval when called in a tight loop on one inp
   - UHF DF
   - STBY BTRY
   - All left side brown and tan panel toggles
-- Need to record IPAC values to switch_info.py
 - Send events to a named pipe
 
 - BEACON (scancode = 2) delivers down when up event is sent. Fix or use signal for a push button.

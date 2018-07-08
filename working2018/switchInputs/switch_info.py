@@ -16,7 +16,7 @@ Key meanings:
 
 switches = {
         38: {
-            'ipac4': 'KLR',
+            'ipac4': '3RGHT',
             'type': 'SPST',
             'mainLabel': 'WARN LIGHTS',
             'offLabel': 'BRIGHT',
@@ -26,7 +26,7 @@ switches = {
             },
 
         36: {
-            'ipac4': 'KLR',
+            'ipac4': '3LEFT',
             'type': 'SPST',
             'mainLabel': 'CABIN PRESS - AUDIO',
             'offLabel': 'TONE',
@@ -36,7 +36,7 @@ switches = {
             },
             
         23: {
-            'ipac4': 'KLR',
+            'ipac4': '3UP',
             'type': 'SPST',
             'mainLabel': 'O2 QUAN - AUDIO',
             'offLabel': 'TONE',
@@ -46,7 +46,7 @@ switches = {
             },
             
         37: {
-            'ipac4': 'KLR',
+            'ipac4': '3DOWN',
             'type': 'SPST',
             'mainLabel': 'O2 EMER',
             'offLabel': 'TONE',
@@ -56,7 +56,7 @@ switches = {
             },
             
         97: {
-            'ipac4': 'KLR',
+            'ipac4': '3SW1',
             'type': 'SPST',
             'mainLabel': 'EXCESS SUIT H2O - AUDIO',
             'offLabel': 'TONE',
@@ -66,7 +66,7 @@ switches = {
             },
             
         54: {
-            'ipac4': 'KLR',
+            'ipac4': '3SW2',
             'type': 'SPST',
             'mainLabel': 'EXCESS CABIN H2O - AUDIO',
             'offLabel': 'TONE',
@@ -76,7 +76,7 @@ switches = {
             },
             
         28: {
-            'ipac4': 'KLR',
+            'ipac4': '3SW3',
             'type': 'SPST',
             'mainLabel': 'FUEL QUAN - AUDIO',
             'offLabel': 'TONE',
@@ -86,7 +86,7 @@ switches = {
             },
             
         24: {
-            'ipac4': 'KLR',
+            'ipac4': '3SW4',
             'type': 'SPST',
             'mainLabel': 'RETRO WARN - AUDIO',
             'offLabel': 'TONE',
@@ -96,7 +96,7 @@ switches = {
             },
             
         63: {
-            'ipac4': 'KLR',
+            'ipac4': '3SW5',
             'type': 'SPST',
             'mainLabel': 'RETRO RESET - AUDIO',
             'offLabel': 'TONE',
@@ -106,7 +106,7 @@ switches = {
             },
 
         65: {
-            'ipac4': 'KLR',
+            'ipac4': '3SW7',
             'type': 'SPDT',
             'mainLabel': 'SUIT FAN',
             'offLabel': 'No 1',
@@ -116,7 +116,7 @@ switches = {
             },
             
         66: {
-            'ipac4': 'KLR',
+            'ipac4': '3SW8',
             'type': 'SPDT',
             'mainLabel': 'SUIT FAN',
             'offLabel': 'No 1',
@@ -126,7 +126,7 @@ switches = {
             },
             
         4: {
-            'ipac4': 'KLR',
+            'ipac4': '3STRT',
             'type': 'SPST',
             'mainLabel': 'CABIN FAN',
             'offLabel': 'NORM',
@@ -136,7 +136,7 @@ switches = {
             },
             
         8: {
-            'ipac4': 'KLR',
+            'ipac4': '3COIN',
             'type': 'SPDT',
             'mainLabel': 'ASCS AC BUS',
             'offLabel': 'OFF',
@@ -146,7 +146,7 @@ switches = {
             },
             
         106: {
-            'ipac4': 'KLR',
+            'ipac4': '1RGHT',
             'type': 'SPDT',
             'mainLabel': 'ASCS AC BUS',
             'offLabel': 'OFF',
@@ -156,7 +156,7 @@ switches = {
             },
             
         108: {
-            'ipac4': 'KLR',
+            'ipac4': '1DOWN',
             'type': 'SPST',
             'mainLabel': 'ISOL BTRY',
             'offLabel': 'NORM',
@@ -166,7 +166,7 @@ switches = {
             },
             
         105: {
-            'ipac4': 'KLR',
+            'ipac4': '1LEFT',
             'type': 'SPDT',
             'mainLabel': 'AMMETER',
             'offLabel': 'PWR OFF',
@@ -176,7 +176,7 @@ switches = {
             },
 
         103: {
-            'ipac4': 'KLR',
+            'ipac4': '1UP',
             'type': 'SPDT',
             'mainLabel': 'AMMETER',
             'offLabel': 'PWR OFF',
@@ -186,7 +186,7 @@ switches = {
             },
             
         29: {
-            'ipac4': 'KLR',
+            'ipac4': '1SW1',
             'type': 'SPDT',
             'mainLabel': 'FANS AC BUS',
             'offLabel': 'OFF',
@@ -196,7 +196,7 @@ switches = {
             },
             
         56: {
-            'ipac4': 'KLR',
+            'ipac4': '1SW2',
             'type': 'SPDT',
             'mainLabel': 'FANS AC BUS',
             'offLabel': 'OFF',
@@ -206,7 +206,7 @@ switches = {
             },
             
         44: {
-            'ipac4': 'KLR',
+            'ipac4': '1SW5',
             'type': 'SPST',
             'mainLabel': 'AC VOLTS',
             'offLabel': 'FANS',
@@ -216,7 +216,7 @@ switches = {
             },
             
         42: {
-            'ipac4': 'KLR',
+            'ipac4': '1SW4',
             'type': 'SPST',
             'mainLabel': 'AUDIO BUS',
             'offLabel': 'NORM',
@@ -226,7 +226,7 @@ switches = {
             },
             
         57: {
-            'ipac4': 'KLR',
+            'ipac4': '1SW3',
             'type': 'SPST',
             'mainLabel': 'INLET VALVE PWR',
             'offLabel': 'NORM',
@@ -236,7 +236,7 @@ switches = {
             },
             
         2: {
-            'ipac4': 'KLR',
+            'ipac4': '1STRT',
             'type': 'SPST',
             'mainLabel': 'BEACON',
             'offLabel': 'CONT',
@@ -246,7 +246,7 @@ switches = {
             },
             
         46: {
-            'ipac4': 'KLR',
+            'ipac4': '1SW7',
             'type': 'SPDT',
             'mainLabel': 'TRANSMIT',
             'offLabel': 'OFF',
@@ -256,7 +256,7 @@ switches = {
             },
             
         47: {
-            'ipac4': 'KLR',
+            'ipac4': '1SW8',
             'type': 'SPDT',
             'mainLabel': 'TRANSMIT',
             'offLabel': 'OFF',
@@ -266,7 +266,7 @@ switches = {
             },
             
         45: {
-            'ipac4': 'KLR',
+            'ipac4': '1SW6',
             'type': 'SPST',
             'mainLabel': 'UHF SELECT',
             'offLabel': 'HI PWR',
@@ -276,7 +276,7 @@ switches = {
             },
             
         64: {
-            'ipac4': 'KLR',
+            'ipac4': '3SW6',
             'type': 'SPST',
             'mainLabel': 'O2 FLOW',
             'offLabel': 'PRIM',
