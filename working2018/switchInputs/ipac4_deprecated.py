@@ -1,3 +1,4 @@
+# OLD/DEPRECATED - Keep around for ideas on building a controller for the telelights, but don't use this any more
 from evdev import InputDevice, categorize, ecodes
 dev = InputDevice('/dev/input/event1')
 

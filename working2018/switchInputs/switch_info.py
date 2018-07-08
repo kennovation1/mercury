@@ -13,6 +13,7 @@ Key meanings:
     
     Positions must be one of: 'LEFT', 'RIGHT', 'UP', 'DOWN', 'CENTER'. CENTER is only used for SPDT switches.
 '''
+import json
 
 switches = {
         38: {
@@ -349,6 +350,28 @@ def printSwitchInfoDebug(key, state):
                 color.END
                 )
 
+def makeEventMessage(key, state):
+    ''' Create an event message '''
+    eventType = 'toggleSwitch'
+
+    swinfo = getSwitchInfo(key)
+    if swinfo is None:
+        eventName = 'INVALID_KEY'
+        eventDescription = 'Umapped key found: ' + str(key)
+    else:
+        if state == 0:
+            stateLabel = swinfo['offLabel']
+        else:
+            stateLabel = swinfo['onLabel']
+
+        eventName = swinfo['mainLabel'] + '=>' + stateLabel
+        eventDescription = swinfo['mainLabel'] + ' toggled to ' + stateLabel
+
+    return {
+            'eventName': eventName,
+            'eventType': eventType,
+            'eventDescription': eventDescription
+            }
 
 ########
 # MAIN #
@@ -366,3 +389,5 @@ if __name__ == '__main__':
         printSwitchInfo(65, 1, debug)
         printSwitchInfo(66, 1, debug)
 
+    print(json.dumps(makeEventMessage(66, 0), indent=4))
+    print(json.dumps(makeEventMessage(66, 1), indent=4))

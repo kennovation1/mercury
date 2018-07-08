@@ -20,14 +20,14 @@ Hold events are spaced at a 40ms interval when called in a tight loop on one inp
 
 # Status
 - TODO **Ground is not cabled yet. Need to use aligator clip**
-- All switches that are wired work. Not wired:
+- All switches that are wired work
+- Still need to wire:
   - All momentary switches
   - VOX PWR
   - UHF DF
   - STBY BTRY
   - All left side brown and tan panel toggles
-- Send events to a named pipe
-
+  - Fuel control values and pull pins
 - BEACON (scancode = 2) delivers down when up event is sent. Fix or use signal for a push button.
 
 # Setup
@@ -41,8 +41,9 @@ Hold events are spaced at a 40ms interval when called in a tight loop on one inp
 - I had originally tried to use pyusb to read the IPAC-4 but got a "Resource Busy" error. This is why I moved to evdev.
 
 # Testing
-- python fiforecv.py & # To receive events and print to screen if -f switch is used below
-- python testinput.py [-f]
+- python fiforecv.py & # To receive events and print to screen if -f switch is used below; or
+- python fiforecv.py > /dev/null & # To consume events, but don't display debug output (or redirect to a file)
+- python readswitches.py [-f]
   - Toggle buttons and observe printout to screen for each state change. Continuous hold events are not printed.
-  - -f is optional and will cause events to be written to fifo
+  - -f is optional and will cause events to be written to fifo that can be read by fiforecv.py
 

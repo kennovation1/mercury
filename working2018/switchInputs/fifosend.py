@@ -38,4 +38,5 @@ makeFifo(FIFO)
 with open(FIFO, 'w') as fp:
     for i in range(4):
         fp.write(makeMessage(i))
+        fp.flush()
 
