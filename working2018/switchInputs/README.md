@@ -18,6 +18,16 @@ Emprically:
 A hold event will be delivered if the key is down for about 240ms
 Hold events are spaced at a 40ms interval when called in a tight loop on one input device.
 
+I used `umtool mercury.json` to remap the keys. This was required since the factory settings has a bunch of pins
+mapped to space and not unique values. Also, ther are two shift keys that behave differently and I don't want to use
+(might be able to use for momementary buttons). I mapped these to 1COIN and 2COIN respectively and have not wired
+anything to those pins.
+
+umtool was build separately and the binary copied into this directory.
+
+See `mercury.json` for the mapping. This should also match switch_info.py
+See Ultimarc-linux directory for the source for umtool and how to build and run it.
+
 # Status
 - TODO **Ground is not cabled yet. Need to use aligator clip**
 - All switches that are wired work
