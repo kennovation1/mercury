@@ -41,5 +41,8 @@ Hold events are spaced at a 40ms interval when called in a tight loop on one inp
 - I had originally tried to use pyusb to read the IPAC-4 but got a "Resource Busy" error. This is why I moved to evdev.
 
 # Testing
-- python testinput.py 
+- python fiforecv.py & # To receive events and print to screen if -f switch is used below
+- python testinput.py [-f]
   - Toggle buttons and observe printout to screen for each state change. Continuous hold events are not printed.
+  - -f is optional and will cause events to be written to fifo
+
