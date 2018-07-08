@@ -25,11 +25,14 @@ anything to those pins.
 
 umtool was build separately and the binary copied into this directory.
 
-See `mercury.json` for the mapping. This should also match switch_info.py
+See `ipac4-mercury.json` for the mapping. This should also match switch_info.py
 See Ultimarc-linux directory for the source for umtool and how to build and run it.
 
 # Status
+- TODO Update switch_info.py to match ipac4-mercury.json mappings
 - TODO **Ground is not cabled yet. Need to use aligator clip**
+- Don't use 1COIN or 2COIN (maybe use for momentary if needed). These are shift buttons and only sent events
+  when the key state is UP (and then sends both the DOWN and UP events).
 - All switches that are wired work
 - Still need to wire:
   - All momentary switches
@@ -38,7 +41,6 @@ See Ultimarc-linux directory for the source for umtool and how to build and run 
   - STBY BTRY
   - All left side brown and tan panel toggles
   - Fuel control values and pull pins
-- BEACON (scancode = 2) delivers down when up event is sent. Fix or use signal for a push button.
 
 # Setup
 - Connect to Pi with USB-to-micro-USB cable
