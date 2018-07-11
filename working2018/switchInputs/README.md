@@ -16,22 +16,17 @@ of holds. Then if switch B is closed, it will report a stream of holds, but A wi
 
 Emprically:
 A hold event will be delivered if the key is down for about 240ms
-Hold events are spaced at a 40ms interval when called in a tight loop on one input device.
 
-I used `umtool mercury.json` to remap the keys. This was required since the factory settings has a bunch of pins
-mapped to space and not unique values. Also, ther are two shift keys that behave differently and I don't want to use
-(might be able to use for momementary buttons). I mapped these to 1COIN and 2COIN respectively and have not wired
-anything to those pins.
+Downloaded and run MacIPAC to use UI to set key mappings (since umtool seems to do nothing).
+__2COIN and 4COIN__ are set to be the shift keys. Don't use these for toggles since the down event is not sent
+until the up event is sent.
 
-umtool was build separately and the binary copied into this directory.
-
-See `ipac4-mercury.json` for the mapping. This should also match switch_info.py
-See Ultimarc-linux directory for the source for umtool and how to build and run it.
+See Ultimarc-linux directory for the source for umtool and how to build and run it. *HOWEVER*, this seems not to work.
+I ran the tool and it said success, but it didn't seem to change the board configuration. This is why I used
+MacIPAC UI instead.
 
 # Status
-- TODO Update switch_info.py to match ipac4-mercury.json mappings
 - TODO **Ground is not cabled yet. Need to use aligator clip**
-- Don't use 1COIN or 2COIN (maybe use for momentary if needed). These are shift buttons and only sent events
   when the key state is UP (and then sends both the DOWN and UP events).
 - All switches that are wired work
 - Still need to wire:
