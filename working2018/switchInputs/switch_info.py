@@ -16,7 +16,7 @@ Key meanings:
 import json
 
 switches = {
-        49: {
+        30: {
             'ipac4': '3RGHT',
             'type': 'SPST',
             'mainLabel': 'WARN LIGHTS',
@@ -26,7 +26,7 @@ switches = {
             'onPosition': 'LEFT'
             },
 
-        39: {
+        48: {
             'ipac4': '3LEFT',
             'type': 'SPST',
             'mainLabel': 'CABIN PRESS - AUDIO',
@@ -36,7 +36,7 @@ switches = {
             'onPosition': 'LEFT'
             },
             
-        18: {
+        46: {
             'ipac4': '3UP',
             'type': 'SPST',
             'mainLabel': 'O2 QUAN - AUDIO',
@@ -46,17 +46,17 @@ switches = {
             'onPosition': 'LEFT'
             },
             
-        41: {
+        32: {
             'ipac4': '3DOWN',
             'type': 'SPST',
-            'mainLabel': 'O2 EMER',
+            'mainLabel': 'O2 EMER - AUDIO',
             'offLabel': 'TONE',
             'offPosition': 'RIGHT',
             'onLabel': 'OFF',
             'onPosition': 'LEFT'
             },
             
-        43: {
+        18: {
             'ipac4': '3SW1',
             'type': 'SPST',
             'mainLabel': 'EXCESS SUIT H2O - AUDIO',
@@ -66,7 +66,7 @@ switches = {
             'onPosition': 'LEFT'
             },
             
-        44: {
+        33: {
             'ipac4': '3SW2',
             'type': 'SPST',
             'mainLabel': 'EXCESS CABIN H2O - AUDIO',
@@ -76,7 +76,7 @@ switches = {
             'onPosition': 'LEFT'
             },
             
-        45: {
+        34: {
             'ipac4': '3SW3',
             'type': 'SPST',
             'mainLabel': 'FUEL QUAN - AUDIO',
@@ -86,7 +86,7 @@ switches = {
             'onPosition': 'LEFT'
             },
             
-        46: {
+        35: {
             'ipac4': '3SW4',
             'type': 'SPST',
             'mainLabel': 'RETRO WARN - AUDIO',
@@ -96,7 +96,7 @@ switches = {
             'onPosition': 'LEFT'
             },
             
-        47: {
+        23: {
             'ipac4': '3SW5',
             'type': 'SPST',
             'mainLabel': 'RETRO RESET - AUDIO',
@@ -106,177 +106,7 @@ switches = {
             'onPosition': 'LEFT'
             },
 
-        79: {
-            'ipac4': '3SW7',
-            'type': 'SPDT',
-            'mainLabel': 'SUIT FAN',
-            'offLabel': 'No 1',
-            'offPosition': 'CENTER',
-            'onLabel': 'NORM',
-            'onPosition': 'RIGHT'
-            },
-            
-        82: {
-            'ipac4': '3SW8',
-            'type': 'SPDT',
-            'mainLabel': 'SUIT FAN',
-            'offLabel': 'No 1',
-            'offPosition': 'CENTER',
-            'onLabel': 'No 2',
-            'onPosition': 'LEFT'
-            },
-            
-        81: {
-            'ipac4': '3STRT',
-            'type': 'SPST',
-            'mainLabel': 'CABIN FAN',
-            'offLabel': 'NORM',
-            'offPosition': 'RIGHT',
-            'onLabel': 'OFF',
-            'onPosition': 'LEFT'
-            },
-            
-        80: {
-            'ipac4': '3COIN',
-            'type': 'SPDT',
-            'mainLabel': 'ASCS AC BUS',
-            'offLabel': 'OFF',
-            'offPosition': 'CENTER',
-            'onLabel': 'NORM',
-            'onPosition': 'RIGHT'
-            },
-            
-        4: {
-            'ipac4': '1RGHT',
-            'type': 'SPDT',
-            'mainLabel': 'ASCS AC BUS',
-            'offLabel': 'OFF',
-            'offPosition': 'CENTER',
-            'onLabel': 'STBY',
-            'onPosition': 'LEFT'
-            },
-            
-        6: {
-            'ipac4': '1DOWN',
-            'type': 'SPST',
-            'mainLabel': 'ISOL BTRY',
-            'offLabel': 'NORM',
-            'offPosition': 'RIGHT',
-            'onLabel': 'STBY',
-            'onPosition': 'LEFT'
-            },
-            
-        7: {
-            'ipac4': '1LEFT',
-            'type': 'SPDT',
-            'mainLabel': 'AMMETER',
-            'offLabel': 'PWR OFF',
-            'offPosition': 'CENTER',
-            'onLabel': 'NORM',
-            'onPosition': 'RIGHT'
-            },
-
-        5: {
-            'ipac4': '1UP',
-            'type': 'SPDT',
-            'mainLabel': 'AMMETER',
-            'offLabel': 'PWR OFF',
-            'offPosition': 'CENTER',
-            'onLabel': 'BYPASS',
-            'onPosition': 'LEFT'
-            },
-            
-        8: {
-            'ipac4': '1SW1',
-            'type': 'SPDT',
-            'mainLabel': 'FANS AC BUS',
-            'offLabel': 'OFF',
-            'offPosition': 'CENTER',
-            'onLabel': 'NORM',
-            'onPosition': 'RIGHT'
-            },
-            
-        9: {
-            'ipac4': '1SW2',
-            'type': 'SPDT',
-            'mainLabel': 'FANS AC BUS',
-            'offLabel': 'OFF',
-            'offPosition': 'CENTER',
-            'onLabel': 'STBY',
-            'onPosition': 'LEFT'
-            },
-            
-        12: {
-            'ipac4': '1SW5',
-            'type': 'SPST',
-            'mainLabel': 'AC VOLTS',
-            'offLabel': 'FANS',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ASCS',
-            'onPosition': 'LEFT'
-            },
-            
-        11: {
-            'ipac4': '1SW4',
-            'type': 'SPST',
-            'mainLabel': 'AUDIO BUS',
-            'offLabel': 'NORM',
-            'offPosition': 'RIGHT',
-            'onLabel': 'EMER',
-            'onPosition': 'LEFT'
-            },
-            
-        10: {
-            'ipac4': '1SW3',
-            'type': 'SPST',
-            'mainLabel': 'INLET VALVE PWR',
-            'offLabel': 'NORM',
-            'offPosition': 'RIGHT',
-            'onLabel': 'BYPASS',
-            'onPosition': 'LEFT'
-            },
-            
-        16: {
-            'ipac4': '1STRT',
-            'type': 'SPST',
-            'mainLabel': 'BEACON',
-            'offLabel': 'CONT',
-            'offPosition': 'RIGHT',
-            'onLabel': 'GRND COMD',
-            'onPosition': 'LEFT'
-            },
-            
-        14: {
-            'ipac4': '1SW7',
-            'type': 'SPDT',
-            'mainLabel': 'TRANSMIT',
-            'offLabel': 'OFF',
-            'offPosition': 'CENTER',
-            'onLabel': 'UHF',
-            'onPosition': 'RIGHT'
-            },
-            
-        15: {
-            'ipac4': '1SW8',
-            'type': 'SPDT',
-            'mainLabel': 'TRANSMIT',
-            'offLabel': 'OFF',
-            'offPosition': 'CENTER',
-            'onLabel': 'HF',
-            'onPosition': 'LEFT'
-            },
-            
-        13: {
-            'ipac4': '1SW6',
-            'type': 'SPST',
-            'mainLabel': 'UHF SELECT',
-            'offLabel': 'HI PWR',
-            'offPosition': 'RIGHT',
-            'onLabel': 'LO PWR',
-            'onPosition': 'LEFT'
-            },
-            
-        48: {
+        36: {
             'ipac4': '3SW6',
             'type': 'SPST',
             'mainLabel': 'O2 FLOW',
@@ -286,270 +116,450 @@ switches = {
             'onPosition': 'LEFT'
             },
 
-        112: {
-            'ipac4': '4RGHT',
+        37: {
+            'ipac4': '3SW7',
+            'type': 'SPDT',
+            'mainLabel': 'SUIT FAN',
+            'offLabel': 'No 1',
+            'offPosition': 'CENTER',
+            'onLabel': 'NORM',
+            'onPosition': 'RIGHT'
+            },
+            
+        38: {
+            'ipac4': '3SW8',
+            'type': 'SPDT',
+            'mainLabel': 'SUIT FAN',
+            'offLabel': 'No 1',
+            'offPosition': 'CENTER',
+            'onLabel': 'No 2',
+            'onPosition': 'LEFT'
+            },
+            
+        50: {
+            'ipac4': '3STRT',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=112',
-            'offLabel': 'OFFLABEL_NOTSET',
+            'mainLabel': 'CABIN FAN',
+            'offLabel': 'NORM',
             'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'onLabel': 'OFF',
+            'onPosition': 'LEFT'
+            },
+            
+        49: {
+            'ipac4': '3COIN',
+            'type': 'SPDT',
+            'mainLabel': 'ASCS AC BUS',
+            'offLabel': 'OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'NORM',
+            'onPosition': 'RIGHT'
+            },
+            
+        24: {
+            'ipac4': '1RGHT',
+            'type': 'SPDT',
+            'mainLabel': 'ASCS AC BUS',
+            'offLabel': 'OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'STBY',
+            'onPosition': 'LEFT'
             },
 
-        113: {
-            'ipac4': '4LEFT',
+         25: {
+            'ipac4': '1LEFT',
+            'type': 'SPDT',
+            'mainLabel': 'AMMETER',
+            'offLabel': 'PWR OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'NORM',
+            'onPosition': 'RIGHT'
+            },
+            
+        16: {
+            'ipac4': '1UP',
+            'type': 'SPDT',
+            'mainLabel': 'AMMETER',
+            'offLabel': 'PWR OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'BYPASS',
+            'onPosition': 'LEFT'
+            },
+            
+        19: {
+            'ipac4': '1DOWN',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=113',
-            'offLabel': 'OFFLABEL_NOTSET',
+            'mainLabel': 'ISOL BTRY',
+            'offLabel': 'NORM',
             'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'onLabel': 'STBY',
+            'onPosition': 'LEFT'
             },
 
-        116: {
-            'ipac4': '4UP',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=116',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+        31: {
+            'ipac4': '1SW1',
+            'type': 'SPDT',
+            'mainLabel': 'FANS AC BUS',
+            'offLabel': 'OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'NORM',
+            'onPosition': 'RIGHT'
             },
-
-        42: {
-            'ipac4': '4DOWN',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=42',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            
+        20: {
+            'ipac4': '1SW2',
+            'type': 'SPDT',
+            'mainLabel': 'FANS AC BUS',
+            'offLabel': 'OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'STBY',
+            'onPosition': 'LEFT'
             },
-
-        117: {
-            'ipac4': '4SW1',
+                     
+        22: {
+            'ipac4': '1SW3',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=117',
-            'offLabel': 'OFFLABEL_NOTSET',
+            'mainLabel': 'INLET VALVE PWR',
+            'offLabel': 'NORM',
             'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'onLabel': 'BYPASS',
+            'onPosition': 'LEFT'
             },
-
-        58: {
-            'ipac4': '4SW2',
+   
+        47: {
+            'ipac4': '1SW4',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=58',
-            'offLabel': 'OFFLABEL_NOTSET',
+            'mainLabel': 'AUDIO BUS',
+            'offLabel': 'NORM',
             'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
-            },
-
-        59: {
-            'ipac4': '4SW3',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=59',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
-            },
-
-        60: {
-            'ipac4': '4SW4',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=60',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
-            },
-
-        61: {
-            'ipac4': '4SW5',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=61',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
-            },
-
-        62: {
-            'ipac4': '4SW6',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=62',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
-            },
-
-        63: {
-            'ipac4': '4SW7',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=63',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
-            },
-
-        64: {
-            'ipac4': '4SW8',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=64',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
-            },
-
-        65: {
-            'ipac4': '4STRT',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=65',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
-            },
-
-        66: {
-            'ipac4': '4COIN',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=66',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'onLabel': 'EMER',
+            'onPosition': 'LEFT'
             },
 
         17: {
+            'ipac4': '1SW5',
+            'type': 'SPST',
+            'mainLabel': 'AC VOLTS',
+            'offLabel': 'FANS',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ASCS',
+            'onPosition': 'LEFT'
+            },
+
+        45: {
+            'ipac4': '1SW6',
+            'type': 'SPST',
+            'mainLabel': 'UHF SELECT',
+            'offLabel': 'HI PWR',
+            'offPosition': 'RIGHT',
+            'onLabel': 'LO PWR',
+            'onPosition': 'LEFT'
+            },
+                      
+        21: {
+            'ipac4': '1SW7',
+            'type': 'SPDT',
+            'mainLabel': 'TRANSMIT',
+            'offLabel': 'OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'UHF',
+            'onPosition': 'RIGHT'
+            },
+            
+        44: {
+            'ipac4': '1SW8',
+            'type': 'SPDT',
+            'mainLabel': 'TRANSMIT',
+            'offLabel': 'OFF',
+            'offPosition': 'CENTER',
+            'onLabel': 'HF',
+            'onPosition': 'LEFT'
+            },
+             
+        2: {
+            'ipac4': '1STRT',
+            'type': 'SPST',
+            'mainLabel': 'BEACON',
+            'offLabel': 'CONT',
+            'offPosition': 'RIGHT',
+            'onLabel': 'GRND COMD',
+            'onPosition': 'LEFT'
+            },
+                       
+        200: {
+            'ipac4': '1COIN',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        201: {
+            'ipac4': '4RGHT',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        202: {
+            'ipac4': '4LEFT',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        203: {
+            'ipac4': '4UP',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        204: {
+            'ipac4': '4DOWN',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        205: {
+            'ipac4': '4SW1',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        206: {
+            'ipac4': '4SW2',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        207: {
+            'ipac4': '4SW3',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        208: {
+            'ipac4': '4SW4',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        209: {
+            'ipac4': '4SW5',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        210: {
+            'ipac4': '4SW6',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        211: {
+            'ipac4': '4SW7',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        212: {
+            'ipac4': '4SW8',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        213: {
+            'ipac4': '4STRT',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        214: {
+            'ipac4': '4COIN',
+            'type': 'SPST',
+            'mainLabel': '*UNSET* scancode=',
+            'offLabel': 'OFFLABEL_NOTSET',
+            'offPosition': 'RIGHT',
+            'onLabel': 'ONLABEL_NOTSET',
+            'onPosition': 'LEFT',
+            },
+
+        215: {
             'ipac4': '2RGHT',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=17',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        20: {
+        216: {
             'ipac4': '2LEFT',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=20',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        18: {
+        217: {
             'ipac4': '2UP',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=18',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        19: {
+        218: {
             'ipac4': '2DOWN',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=19',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        21: {
+        219: {
             'ipac4': '2SW1',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=21',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        22: {
+        220: {
             'ipac4': '2SW2',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=22',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        23: {
+        221: {
             'ipac4': '2SW3',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=23',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        24: {
+        222: {
             'ipac4': '2SW4',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=24',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        25: {
+        223: {
             'ipac4': '2SW5',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=25',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        26: {
+        224: {
             'ipac4': '2SW6',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=26',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        27: {
+        225: {
             'ipac4': '2SW7',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=27',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        28: {
+        226: {
             'ipac4': '2SW8',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=28',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        29: {
+        227: {
             'ipac4': '2STRT',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=29',
+            'mainLabel': '*UNSET* scancode=',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
