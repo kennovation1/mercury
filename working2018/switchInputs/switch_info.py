@@ -3,8 +3,8 @@ Dictionary of objects that are indexed by the key scancode int returned by readi
 
 Key meanings:
     'ipac4': Silk screened label for the signal on the IPAC-4
-    'type': 'SPST' or 'SPDT' (2-way or 3-way switch). Note that a SPDT switch will have 2 entries since it is treated
-            as two SPST switches
+    'type': 'SPST', 'SPST-MOM', or 'SPDT'. For 2-way toggle, 2-way momentary, or 3-way toggle.
+             Note that a SPDT switch will have 2 entries since it is treated as two SPST switches
     'mainLabel': Main label for a switch as printed on panel
     'offLabel': Label for the 'off' (key up) position of the switch
     'offPosition': Physical position of the switch to be off (key up)
@@ -12,6 +12,7 @@ Key meanings:
     'onPosition' Physical position of the switch to be on (key down)
     
     Positions must be one of: 'LEFT', 'RIGHT', 'UP', 'DOWN', 'CENTER'. CENTER is only used for SPDT switches.
+    Positions for SPST-MOM must be one of: 'PRESSED' or 'RELEASED'
 '''
 import json
 
@@ -286,93 +287,93 @@ switches = {
             'onPosition': 'LEFT'
             },
                        
-        200: {
+        3: {
             'ipac4': '1COIN',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
+            'mainLabel': 'VOX PWR',
+            'offLabel': 'ON',
             'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
+            'onLabel': 'OFF',
             'onPosition': 'LEFT',
             },
 
-        201: {
+        4: {
             'ipac4': '4RGHT',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'type': 'SPST-MOM',
+            'mainLabel': 'BLOOD PRESS - STOP',
+            'offLabel': 'released',
+            'offPosition': 'RELEASED',
+            'onLabel': 'pressed',
+            'onPosition': 'PRESSED',
             },
 
-        202: {
+        5: {
             'ipac4': '4LEFT',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'type': 'SPST-MOM',
+            'mainLabel': 'BLOOD PRESS - START',
+            'offLabel': 'released',
+            'offPosition': 'RELEASED',
+            'onLabel': 'pressed',
+            'onPosition': 'PRESSED',
             },
 
-        203: {
+        6: {
             'ipac4': '4UP',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'type': 'SPST-MOM',
+            'mainLabel': 'KEY',
+            'offLabel': 'released',
+            'offPosition': 'RELEASED',
+            'onLabel': 'pressed',
+            'onPosition': 'PRESSED',
             },
 
-        204: {
+        7: {
             'ipac4': '4DOWN',
-            'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'type': 'SPST-MOM',
+            'mainLabel': 'TIME ZERO',
+            'offLabel': 'released',
+            'offPosition': 'RELEASED',
+            'onLabel': 'pressed',
+            'onPosition': 'PRESSED',
             },
 
-        205: {
+        8: {
             'ipac4': '4SW1',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
+            'mainLabel': 'LIGHT TEST',
+            'offLabel': 'OFF',
             'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
+            'onLabel': 'ON',
             'onPosition': 'LEFT',
             },
 
-        206: {
+        9: {
             'ipac4': '4SW2',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
+            'mainLabel': 'RATE IND',
+            'offLabel': 'MAN ON',
             'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
+            'onLabel': 'AUTO',
             'onPosition': 'LEFT',
             },
 
-        207: {
+        10: {
             'ipac4': '4SW3',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
+            'mainLabel': 'STBT BTRY',
+            'offLabel': 'OFF',
             'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
+            'onLabel': 'ON',
             'onPosition': 'LEFT',
             },
 
-        208: {
+        11: {
             'ipac4': '4SW4',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
+            'mainLabel': 'UHF DF',
+            'offLabel': 'R/T',
             'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
+            'onLabel': 'NORM',
             'onPosition': 'LEFT',
             },
 
