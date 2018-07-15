@@ -171,14 +171,21 @@ messages = [
             {
             'type': 'LOGICAL',
             'target': 'LANDING BAG',
-            'subtarget': 'red',
-            'action': 'off',
+            'subtarget': 'left',
+            'action': 'on',
             'intensity': 50
             },
             {
             'type': 'LOGICAL',
             'target': 'RESCUE',
-            'subtarget': 'red',
+            'subtarget': 'left',
+            'action': 'on',
+            'intensity': 50
+            },
+            {
+            'type': 'LOGICAL',
+            'target': 'RESCUE',
+            'subtarget': 'right',
             'action': 'on',
             'intensity': 50
             },
@@ -212,6 +219,6 @@ with open(FIFO, 'w') as fp:
         buff = json.dumps(message) + '\n'
         # Newline makes it possible to use readline on the other size so that I have a good message boundary
         fp.write(buff)
-        sleep(0.5)
+        sleep(0.25)
         fp.flush()
 

@@ -49,7 +49,7 @@ On voltage was measured at 2.04V and 24.2mA through a single amber LED.
 - Telelight 10: JETT TOWER. Disabled in software and also I recall that I cut the wired on the perf board. Bad ports on PACLED64
 - Telelight 11: SEP CAPSULE. Green is bad. I don't recall if wire is cut or not. Red left and right are okay.
 - Telelight 19: LANDING BAG. Right red is bad. It is super dim and not completely black. Red left and green are okay.
-  This bleeding seems to be in response to either RESCUE left or right
+  This bleeding seems to be in response to either RESCUE right
 - Intensity 50 seems good
 
 # TODO
