@@ -14,7 +14,41 @@ LightsFIFO = '/tmp/light-commands'
 Intensity = 50
 DIM = 50
 BRIGHT = 150
-WarnIntenity = DIM
+WarnIntensity = DIM
+
+WarnLightsState = {
+        'CABIN PRESS': False,
+        'O2 QUAN': False,
+        'O2 EMER': False,
+        'EXCESS SUIT H20': False,
+        'EXCESS CABIN H20': False,
+        'FUEL QUAN': False,
+        'RETRO WARN': False,
+        'RETRO RESET': False,
+        'STBY AC-AUTO': False
+        }
+
+WarnAudioToneEvents = [
+        'CABIN PRESS - AUDIO=>TONE',
+        'O2 QUAN - AUDIO=>TONE',
+        'O2 EMER - AUDIO=>TONE',
+        'EXCESS SUIT H2O - AUDIO=>TONE',
+        'EXCESS CABIN H2O - AUDIO=>TONE',
+        'FUEL QUAN - AUDIO=>TONE',
+        'RETRO WARN - AUDIO=>TONE',
+        'RETRO RESET - AUDIO=>TONE'
+        ]
+
+WarnAudioOffEvents = [
+        'CABIN PRESS - AUDIO=>OFF',
+        'O2 QUAN - AUDIO=>OFF',
+        'O2 EMER - AUDIO=>OFF',
+        'EXCESS SUIT H2O - AUDIO=>OFF',
+        'EXCESS CABIN H2O - AUDIO=>OFF',
+        'FUEL QUAN - AUDIO=>OFF',
+        'RETRO WARN - AUDIO=>OFF',
+        'RETRO RESET - AUDIO=>OFF'
+        ]
 
 def makeFifo(fifoName):
     ''' Create the fifo if it doesn't already exist '''
@@ -35,25 +69,59 @@ def handleSwitchEvent(event):
         setWarnLightsBrightness(bright=False)
     elif eventName == 'WARN LIGHTS=>BRIGHT':
         setWarnLightsBrightness(bright=True)
+    elif eventName in WarnAudioToneEvents:
+        processWarnAudioEvent(eventName, tone=True)
+    elif eventName in WarnAudioOffEvents:
+        processWarnAudioEvent(eventName, tone=False)
+    elif eventName == 'INLET VALVE PWR=>BYPASS':
+        initiateAbort(abort=True)
+    elif eventName == 'INLET VALVE PWR=>NORM':
+        initiateAbort(abort=False)
+    else:
+        print '*** WARNING: Unhandled event name: ' + eventName
 
 def lightTest(on):
+    ''' Turn on or off all lights '''
     message = { 'type': 'LOGICAL', 'target': 'all', 'action': 'off', 'intensity': Intensity }
     if on:
         message['action'] = 'on'
+
     sendLightCommand(message)
 
 def setWarnLightsBrightness(bright):
-    WarnIntensity = DIM
+    ''' Set the brightness of the main panel warning lights to DIM or BRIGHT for lights already on '''
+    global WarnIntensity
+
     if bright:
         WarnIntensity = BRIGHT
+    else:
+        WarnIntensity = DIM
 
-    # TODO: Create a loop over the 10 warn lights that are on and set intensity. Any new warn lights that are enabled
-    # should use WarnIntensity and not Intensity
-    target = 'CABIN PRESS'
-    message = { 'type': 'LOGICAL', 'target': target, 'action': 'on', 'intensity': WarnIntensity }
+    for target in WarnLightsState.keys():
+        if WarnLightsState[target]:
+            message = { 'type': 'LOGICAL', 'target': target, 'action': 'on', 'intensity': WarnIntensity }
+            sendLightCommand(message)
+
+def processWarnAudioEvent(eventName, tone):
+    lightLabel = eventName.split(' - ')[0]
+    message = { 'type': 'LOGICAL', 'target': lightLabel, 'action': 'off', 'intensity': WarnIntensity }
+    if tone:
+        message['action'] = 'on'
+        WarnLightsState[lightLabel] = True
+    else:
+        WarnLightsState[lightLabel] = False
+
+    sendLightCommand(message)
+
+def initiateAbort(abort):
+    message = { 'type': 'LOGICAL', 'target': 'ABORT', 'action': 'off', 'intensity': Intensity }
+    if abort:
+        message['action'] = 'on'
+
     sendLightCommand(message)
 
 def sendLightCommand(message):
+    ''' Send a command to the lights controller FIFO '''
     # Newline makes it possible to use readline on the other size so that I have a good message boundary
     buff = json.dumps(message) + '\n'
     LightsFp.write(buff)
