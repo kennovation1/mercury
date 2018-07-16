@@ -74,9 +74,15 @@ def handleSwitchEvent(event):
     elif eventName in WarnAudioOffEvents:
         processWarnAudioEvent(eventName, tone=False)
     elif eventName == 'INLET VALVE PWR=>BYPASS':
-        initiateAbort(abort=True)
+        setLight('ABORT', True)
     elif eventName == 'INLET VALVE PWR=>NORM':
-        initiateAbort(abort=False)
+        setLight('ABORT', False)
+    elif eventName == 'ISOL BTRY=>STBY':
+        setLight('STBY AC-AUTO', True)
+    elif eventName == 'ISOL BTRY=>NORM':
+        setLight('STBY AC-AUTO', False)
+    elif eventName == 'TIME ZERO=>pressed':
+        initiateSequencer()
     else:
         print '*** WARNING: Unhandled event name: ' + eventName
 
@@ -113,9 +119,36 @@ def processWarnAudioEvent(eventName, tone):
 
     sendLightCommand(message)
 
-def initiateAbort(abort):
-    message = { 'type': 'LOGICAL', 'target': 'ABORT', 'action': 'off', 'intensity': Intensity }
-    if abort:
+def initiateSequencer():
+    sequenceLights = [
+            'RETRO SEQ',
+            'RETRO ATT',
+            'FIRE RETRO',
+            'JETT RETRO',
+            'RETRACT SCOPE',
+            '.05G',
+            'MAIN',
+            'LANDING BAG',
+            'RESCUE'
+            ]
+    for light in sequenceLights:
+        setSequenceLight(light, 'red')
+        sleep(1)
+        setSequenceLight(light, 'off')
+        setSequenceLight(light, 'green')
+        sleep(1)
+
+def setSequenceLight(light, color):
+    message = { 'type': 'LOGICAL', 'target': light, 'action': 'off', 'intensity': Intensity }
+    if color != 'off':
+        message['action'] = 'on'
+        message['subtarget'] = color
+
+    sendLightCommand(message)
+
+def setLight(light, state):
+    message = { 'type': 'LOGICAL', 'target': light, 'action': 'off', 'intensity': Intensity }
+    if state:
         message['action'] = 'on'
 
     sendLightCommand(message)
