@@ -45,24 +45,22 @@ Therefore, I stuck with wiring individually for Telelights that have two greens 
 On voltage was measured at 2.04V and 24.2mA through a single amber LED.
 
 # Status
-- All lights work with the following exceptions
-- Telelight 10: JETT TOWER. Disabled in software and also I recall that I cut the wired on the perf board. Bad ports on PACLED64
-- Telelight 11: SEP CAPSULE. Green is bad. I don't recall if wire is cut or not. Red left and right are okay.
-- Telelight 19: LANDING BAG. Right red is bad. It is super dim and not completely black. Red left and green are okay.
-  This bleeding seems to be in response to either RESCUE right
+- All lights work
 - Intensity 50 seems good
 
 # TODO
-- Fix bad LEDs in hardware and software
-- Create modular software that sets LEDs based on fifo commands
 - Confirm that ramp speed only affects all and cannot be set of an individual LED
 - Until I get a working board or work around bad pins, block bad LEDS in software since I seem to be burning out
   the driver board when I drive the bad LED ports.
-- Updgrade Ultimarc SW?
+- Updgrade Ultimarc Linux SW?
 - Consider creating a boot script if easy to do
 
-# Usage
+# Usage for UI testing
 - python testui.py # To get interactive session to control LEDs
   - Right/main panel telelights are 1-9 (top to bottom)
   - Left panel telelights are 10-19 (**don't use 10 and 11 for now**)
   - Abort is pin 36
+
+# Normal usage
+- python lightcontroller.py &
+- This listens for commands on named pipe (FIFO)

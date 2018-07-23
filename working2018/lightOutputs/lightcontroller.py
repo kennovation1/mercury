@@ -27,9 +27,8 @@ LightInfo = {
 
             # Left panel
             'ABORT':         {'center': 36},
-            'JETT TOWER':    {'left': 'KLR', 'right': 'KLR',  'center': 'KLR'},
-            'SEP CAPSULE':   {'left': 61, 'redright': 62, 'center': 61 },
-            # green is place holder - bad pin at real green location (which is unknown)
+            'JETT TOWER':    {'left': 48, 'right': 63,  'center': 47},
+            'SEP CAPSULE':   {'left': 61, 'right': 62, 'center': 64 },
             'RETRO SEQ':     {'left': 45, 'right': 60, 'center': 59 },
             'RETRO ATT':     {'left': 44, 'right': 58, 'center': 43 },
             'FIRE RETRO':    {'left': 42, 'right': 57, 'center': 41 },
@@ -37,8 +36,7 @@ LightInfo = {
             'RETRACT SCOPE': {'left': 39, 'right': 53, 'center': 54 },
             '.05G':          {'left': 37, 'right': 52, 'center': 38 },
             'MAIN':          {'left': 49, 'right': 51, 'center': 50 },
-            'LANDING BAG':   {'left': 35, 'right': 35, 'center': 34 },
-            # right is place holder. Can't find pin
+            'LANDING BAG':   {'left': 35, 'right': 46, 'center': 34 },
             'RESCUE':        {'left': 31, 'right': 33, 'center': 32 }
         }
 

@@ -164,10 +164,8 @@ def mapTelelightToPins(telelight):
         # Left panel numbered from top to bottom, where 10 is JETT TOWER
         # ABORT is 36 - no command for this yet
         leftPanel = [
-                { 'label': 'JETT TOWER',    'redleft': 'KLR', 'redright': 'KLR',  'green': 'KLR' },
-                { 'label': 'SEP CAPSULE',   'redleft': 61, 'redright': 62, 'green': 61 },
-                # green is place holder - bad pin at real green location (which is unknown)
-
+                { 'label': 'JETT TOWER',    'redleft': 48, 'redright': 63,  'green': 47 },
+                { 'label': 'SEP CAPSULE',   'redleft': 61, 'redright': 62, 'green': 64 },
                 { 'label': 'RETRO SEQ',     'redleft': 45, 'redright': 60, 'green': 59 },
                 { 'label': 'RETRO ATT',     'redleft': 44, 'redright': 58, 'green': 43 },
                 { 'label': 'FIRE RETRO',    'redleft': 42, 'redright': 57, 'green': 41 },
@@ -175,9 +173,7 @@ def mapTelelightToPins(telelight):
                 { 'label': 'RETRACT SCOPE', 'redleft': 39, 'redright': 53, 'green': 54 },
                 { 'label': '.05G',          'redleft': 37, 'redright': 52, 'green': 38 },
                 { 'label': 'MAIN',          'redleft': 49, 'redright': 51, 'green': 50 },
-                { 'label': 'LANDING BAG',   'redleft': 35, 'redright': 35,  'green': 34 },
-                # redright is place holder. Can't find pin
-
+                { 'label': 'LANDING BAG',   'redleft': 35, 'redright': 46,  'green': 34 },
                 { 'label': 'RESCUE',        'redleft': 31, 'redright': 33, 'green': 32 }
                 ]
         mode = 'all' # Both
@@ -203,10 +199,6 @@ def mapTelelightToPins(telelight):
             pins.append(leftPanel[idx]['redleft'])
             pins.append(leftPanel[idx]['redright'])
             pins.append(leftPanel[idx]['green'])
-
-    if num == 10:
-        print '*** IGNORING telelight 10 since PacLED is defective ***'
-        return []
 
     return pins
 

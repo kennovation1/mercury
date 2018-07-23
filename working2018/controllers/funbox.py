@@ -121,6 +121,8 @@ def processWarnAudioEvent(eventName, tone):
 
 def initiateSequencer():
     sequenceLights = [
+            'JETT TOWER',
+            'SEP CAPSULE',
             'RETRO SEQ',
             'RETRO ATT',
             'FIRE RETRO',

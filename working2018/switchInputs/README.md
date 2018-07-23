@@ -26,16 +26,8 @@ I ran the tool and it said success, but it didn't seem to change the board confi
 MacIPAC UI instead.
 
 # Status
-- TODO **Ground is not cabled yet. Need to use aligator clip**
-  when the key state is UP (and then sends both the DOWN and UP events).
-- All switches that are wired work
-- Still need to wire:
-  - All momentary switches
-  - VOX PWR
-  - UHF DF
-  - STBY BTRY
-  - All left side brown and tan panel toggles
-  - Fuel control values and pull pins
+- All switches main panel switches work
+- Not wired: All left panel panel toggles, fuel control values and pull pins
 
 # Setup
 - Connect to Pi with USB-to-micro-USB cable
@@ -54,3 +46,6 @@ MacIPAC UI instead.
   - Toggle buttons and observe printout to screen for each state change. Continuous hold events are not printed.
   - -f is optional and will cause events to be written to fifo that can be read by fiforecv.py
 
+# Usage
+- python readswitches.py -f &
+- Sends switch state events to named pipe (FIFO). Skip writing to pipe by omitting -f for debugging
