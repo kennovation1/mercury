@@ -50,6 +50,24 @@ WarnAudioOffEvents = [
         'RETRO RESET - AUDIO=>OFF'
         ]
 
+MainPanelFuseOffEvents = [
+        'FUSE: SUIT FAN=>OFF',
+        'FUSE: ENVIR CONTL=>OFF',
+        'FUSE: RETRO JETT=>OFF',
+        'FUSE: RETRO MAN=>OFF',
+        'FUSE: PRO GRAMR=>OFF',
+        'FUSE: BLOOD PRESS=>OFF'
+        ]
+
+MainPanelFuseOnEvents = [
+        'FUSE: SUIT FAN=>ON',
+        'FUSE: ENVIR CONTL=>ON',
+        'FUSE: RETRO JETT=>ON',
+        'FUSE: RETRO MAN=>ON',
+        'FUSE: PRO GRAMR=>ON',
+        'FUSE: BLOOD PRESS=>ON'
+        ]
+
 def makeFifo(fifoName):
     ''' Create the fifo if it doesn't already exist '''
     try:
@@ -73,6 +91,10 @@ def handleSwitchEvent(event):
         processWarnAudioEvent(eventName, tone=True)
     elif eventName in WarnAudioOffEvents:
         processWarnAudioEvent(eventName, tone=False)
+    elif eventName in MainPanelFuseOnEvents:
+        processMainPanelFuseEvents(eventName, state=True)
+    elif eventName in MainPanelFuseOffEvents:
+        processMainPanelFuseEvents(eventName, state=False)
     elif eventName == 'INLET VALVE PWR=>BYPASS':
         setLight('ABORT', True)
     elif eventName == 'INLET VALVE PWR=>NORM':
@@ -116,6 +138,14 @@ def processWarnAudioEvent(eventName, tone):
         WarnLightsState[lightLabel] = True
     else:
         WarnLightsState[lightLabel] = False
+
+    sendLightCommand(message)
+
+def processMainPanelFuseEvents(eventName, state):
+    lightLabel = 'ABORT'
+    message = { 'type': 'LOGICAL', 'target': lightLabel, 'action': 'off', 'intensity': Intensity }
+    if state:
+        message['action'] = 'on'
 
     sendLightCommand(message)
 
