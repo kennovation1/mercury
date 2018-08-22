@@ -377,74 +377,74 @@ switches = {
             'onPosition': 'LEFT',
             },
 
-        209: {
+        103: {
             'ipac4': '4SW5',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'mainLabel': 'FUSE: SUIT FAN',
+            'offLabel': 'OFF',
+            'offPosition': 'DOWN',
+            'onLabel': 'ON',
+            'onPosition': 'UP',
             },
 
-        210: {
+        29: {
             'ipac4': '4SW6',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'mainLabel': 'FUSE: ENVIR CONTL',
+            'offLabel': 'OFF',
+            'offPosition': 'DOWN',
+            'onLabel': 'ON',
+            'onPosition': 'UP',
             },
 
-        211: {
+        106: {
             'ipac4': '4SW7',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'mainLabel': 'FUSE: RETRO JETT',
+            'offLabel': 'OFF',
+            'offPosition': 'DOWN',
+            'onLabel': 'ON',
+            'onPosition': 'UP',
             },
 
-        212: {
+        105: {
             'ipac4': '4SW8',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'mainLabel': 'FUSE: RETRO MAN',
+            'offLabel': 'OFF',
+            'offPosition': 'DOWN',
+            'onLabel': 'ON',
+            'onPosition': 'UP',
             },
 
-        213: {
+        108: {
             'ipac4': '4STRT',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'mainLabel': 'FUSE: PRO GRAMR',
+            'offLabel': 'OFF',
+            'offPosition': 'DOWN',
+            'onLabel': 'ON',
+            'onPosition': 'UP',
             },
 
-        214: {
+        999: {
             'ipac4': '4COIN',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
+            'mainLabel': '*UNSET* scancode=999 DO NOT USE',
             'offLabel': 'OFFLABEL_NOTSET',
             'offPosition': 'RIGHT',
             'onLabel': 'ONLABEL_NOTSET',
             'onPosition': 'LEFT',
             },
 
-        215: {
+        56: {
             'ipac4': '2RGHT',
             'type': 'SPST',
-            'mainLabel': '*UNSET* scancode=',
-            'offLabel': 'OFFLABEL_NOTSET',
-            'offPosition': 'RIGHT',
-            'onLabel': 'ONLABEL_NOTSET',
-            'onPosition': 'LEFT',
+            'mainLabel': 'FUSE: BLOOD PRESS',
+            'offLabel': 'OFF',
+            'offPosition': 'DOWN',
+            'onLabel': 'ON',
+            'onPosition': 'UP',
             },
 
         216: {
