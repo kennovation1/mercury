@@ -70,8 +70,15 @@ In practice, each guage will need to be manually calibrated. My SG92R micro serv
 (tested at 60 Hz).
 
 # Git
+```
+#Put this in .bashrc?
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+
+# Common commands
 git init
 git add README.md 
 git commit -m "Initial commit"
 git remote add origin git@github.com:kennovation1/mercury.git
 git push -u origin master
+```
