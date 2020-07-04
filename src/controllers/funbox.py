@@ -149,6 +149,7 @@ def processMainPanelFuseEvents(eventName, state):
 
     sendLightCommand(message)
 
+# TODO Rebuild this using code from replayMission
 def initiateSequencer():
     sequenceLights = [
             'JETT TOWER',
