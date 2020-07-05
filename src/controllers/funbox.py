@@ -8,6 +8,8 @@ import os
 import errno
 from time import sleep
 from threading import Timer
+import subprocess
+import signal
 
 SwitchesFIFO = '/tmp/mercury-events'
 LightsFIFO = '/tmp/light-commands'
@@ -16,6 +18,8 @@ Intensity = 50
 DIM = 50
 BRIGHT = 150
 WarnIntensity = DIM
+
+AudioProcess = 'NOT_SET'
 
 WarnLightsState = {
         'CABIN PRESS': False,
@@ -82,8 +86,12 @@ def makeFifo(fifoName):
 def handleSwitchEvent(event):
     eventName = event['eventName']
 
-    if eventName == 'FUSE: SUIT FAN=>ON':
+    if eventName == 'TIME ZERO=>pressed':
         startMission()
+    elif eventName == 'BLOOD PRESS - STOP=>pressed':
+        stopAudio()
+    elif eventName == 'FUSE: SUIT FAN=>ON':
+        initiateSequencer()
     elif eventName == 'LIGHT TEST=>ON':
         lightTest(on=True)
     elif eventName == 'LIGHT TEST=>OFF':
@@ -108,8 +116,6 @@ def handleSwitchEvent(event):
         setLight('STBY AC-AUTO', True)
     elif eventName == 'ISOL BTRY=>NORM':
         setLight('STBY AC-AUTO', False)
-    elif eventName == 'TIME ZERO=>pressed':
-        initiateSequencer()
     else:
         print '*** WARNING: Unhandled event name: ' + eventName
 
@@ -159,9 +165,25 @@ def processMainPanelFuseEvents(eventName, state):
     sendLightCommand(message)
 
 
-def startMission():
-    startDelay = 1.0  # Initial delay from button press (in seconds)
+def startAudio():
+    audioFile = '/home/pi/mercury/src/audio/mp3s/ma-6-audio-1.mp3'
+    args = ['omxplayer', '--no-keys', audioFile]
+    # preexec_fn is needed so that we can later kill by process group
+    global AudioProcess
+    # TODO stopAudio()
+    AudioProcess = subprocess.Popen(args, preexec_fn=os.setsid)
 
+
+def stopAudio():
+    global AudioProcess
+    os.killpg(os.getpgid(AudioProcess.pid), signal.SIGTERM)  # Send the signal to all the process groups
+    AudioProcess = 'NOT_SET'
+
+
+def startMission():
+    startAudio()
+
+    startDelay = 1.0  # Initial delay from button press (in seconds)
     # Function args must be a sequence type. Therefore, if passing only a single
     # arg, be careful to add a comma so that Python knows it is a sequence.
     # E.g., use (True,) and not (True).
