@@ -6,7 +6,9 @@
 import json
 import os
 import errno
+import time
 from time import sleep
+import sched
 
 SwitchesFIFO = '/tmp/mercury-events'
 LightsFIFO = '/tmp/light-commands'
@@ -68,6 +70,7 @@ MainPanelFuseOnEvents = [
         'FUSE: BLOOD PRESS=>ON'
         ]
 
+
 def makeFifo(fifoName):
     ''' Create the fifo if it doesn't already exist '''
     try:
@@ -76,10 +79,13 @@ def makeFifo(fifoName):
         if oe.errno != errno.EEXIST:
             raise
 
+
 def handleSwitchEvent(event):
     eventName = event['eventName']
 
-    if eventName == 'LIGHT TEST=>ON':
+    if eventName == 'FUSE: SUIT FAN=>ON':
+        startMission()
+    elif eventName == 'LIGHT TEST=>ON':
         lightTest(on=True)
     elif eventName == 'LIGHT TEST=>OFF':
         lightTest(on=False)
@@ -108,6 +114,7 @@ def handleSwitchEvent(event):
     else:
         print '*** WARNING: Unhandled event name: ' + eventName
 
+
 def lightTest(on):
     ''' Turn on or off all lights '''
     message = { 'type': 'LOGICAL', 'target': 'all', 'action': 'off', 'intensity': Intensity }
@@ -115,6 +122,7 @@ def lightTest(on):
         message['action'] = 'on'
 
     sendLightCommand(message)
+
 
 def setWarnLightsBrightness(bright):
     ''' Set the brightness of the main panel warning lights to DIM or BRIGHT for lights already on '''
@@ -130,6 +138,7 @@ def setWarnLightsBrightness(bright):
             message = { 'type': 'LOGICAL', 'target': target, 'action': 'on', 'intensity': WarnIntensity }
             sendLightCommand(message)
 
+
 def processWarnAudioEvent(eventName, tone):
     lightLabel = eventName.split(' - ')[0]
     message = { 'type': 'LOGICAL', 'target': lightLabel, 'action': 'off', 'intensity': WarnIntensity }
@@ -141,6 +150,7 @@ def processWarnAudioEvent(eventName, tone):
 
     sendLightCommand(message)
 
+
 def processMainPanelFuseEvents(eventName, state):
     lightLabel = 'ABORT'
     message = { 'type': 'LOGICAL', 'target': lightLabel, 'action': 'off', 'intensity': Intensity }
@@ -149,7 +159,44 @@ def processMainPanelFuseEvents(eventName, state):
 
     sendLightCommand(message)
 
-# TODO Rebuild this using code from replayMission
+
+def startMission():
+    # Times are in seconds (float)
+    # 2nd arg to enter() is the priority
+    startDelay = 1.0  # Initial delay from button press
+
+    # Function args must be a sequence type. Therefore, if passing only a single
+    # arg, be careful to add a comma so that Python knows a sequence.
+    # E.g., use (True,) and not (True).
+    sequence = [
+                   [0.0,    lightTest, (True,)],
+                   [0.3,    lightTest, (False,)],
+                   [0.35,   setSequenceLight, ('JETT TOWER', 'red')],
+                   [0.5,    setSequenceLight, ('JETT TOWER', 'green')],
+                   [1.0,    setSequenceLight, ('SEP CAPSULE', 'red')],
+                   [1.5,    setSequenceLight, ('SEP CAPSULE', 'green')],
+                   [2.0,    setSequenceLight, ('JETT TOWER', 'off')],
+                   [2.5,    setLight, ('ABORT', True)],
+                   [2.6,    setLight, ('ABORT', False)],
+                   [2.7,    setLight, ('ABORT', True)],
+                   [2.8,    setLight, ('ABORT', False)],
+                   [2.9,    setLight, ('ABORT', True)],
+                   [3.0,    setLight, ('ABORT', False)],
+                   [3.1,    setLight, ('ABORT', True)],
+                   [3.2,    setLight, ('ABORT', False)],
+                   [4.0,    lightTest, (True,)],
+                   [6.0,    lightTest, (False,)]
+            ]
+
+    s = sched.scheduler(time.time, time.sleep)
+
+    for event in sequence:
+        s.enter(startDelay + event[0], 1, event[1], event[2])
+
+    # Note that this is a blocking call
+    s.run()
+
+
 def initiateSequencer():
     sequenceLights = [
             'JETT TOWER',
@@ -171,6 +218,7 @@ def initiateSequencer():
         setSequenceLight(light, 'green')
         sleep(1)
 
+
 def setSequenceLight(light, color):
     message = { 'type': 'LOGICAL', 'target': light, 'action': 'off', 'intensity': Intensity }
     if color != 'off':
@@ -179,12 +227,14 @@ def setSequenceLight(light, color):
 
     sendLightCommand(message)
 
+
 def setLight(light, state):
     message = { 'type': 'LOGICAL', 'target': light, 'action': 'off', 'intensity': Intensity }
     if state:
         message['action'] = 'on'
 
     sendLightCommand(message)
+
 
 def sendLightCommand(message):
     ''' Send a command to the lights controller FIFO '''
