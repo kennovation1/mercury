@@ -4,6 +4,7 @@ This is the unedited audio of the Mercury Atlas 6 / Friendship 7 Flight Audio Re
 
 # All raw air-to-ground audio (not ground loops)
 - Each file is about 48 minutes except for last which is 18 minutes
+- Audio file with ID3 version 2.3.0, contains: MPEG ADTS, layer III, v2, 128 kbps, 16 kHz, Monaural
 - http://science.ksc.nasa.gov/history/mercury/ma-6/sounds/ma-6-audio-1.mp3
 - http://science.ksc.nasa.gov/history/mercury/ma-6/sounds/ma-6-audio-2.mp3
 - http://science.ksc.nasa.gov/history/mercury/ma-6/sounds/ma-6-audio-3.mp3
