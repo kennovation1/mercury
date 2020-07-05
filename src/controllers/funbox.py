@@ -19,7 +19,7 @@ DIM = 50
 BRIGHT = 150
 WarnIntensity = DIM
 
-AudioProcess = 'NOT_SET'
+AudioProcess = None
 
 WarnLightsState = {
         'CABIN PRESS': False,
@@ -170,14 +170,15 @@ def startAudio():
     args = ['omxplayer', '--no-keys', audioFile]
     # preexec_fn is needed so that we can later kill by process group
     global AudioProcess
-    # TODO stopAudio()
+    stopAudio()
     AudioProcess = subprocess.Popen(args, preexec_fn=os.setsid)
 
 
 def stopAudio():
     global AudioProcess
-    os.killpg(os.getpgid(AudioProcess.pid), signal.SIGTERM)  # Send the signal to all the process groups
-    AudioProcess = 'NOT_SET'
+    if AudioProcess is not None:
+        os.killpg(os.getpgid(AudioProcess.pid), signal.SIGTERM)  # Send the signal to all the process groups
+        AudioProcess = None
 
 
 def startMission():
