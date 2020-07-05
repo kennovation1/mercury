@@ -6,9 +6,8 @@
 import json
 import os
 import errno
-import time
 from time import sleep
-import sched
+from threading import Timer
 
 SwitchesFIFO = '/tmp/mercury-events'
 LightsFIFO = '/tmp/light-commands'
@@ -161,13 +160,12 @@ def processMainPanelFuseEvents(eventName, state):
 
 
 def startMission():
-    # Times are in seconds (float)
-    # 2nd arg to enter() is the priority
-    startDelay = 1.0  # Initial delay from button press
+    startDelay = 1.0  # Initial delay from button press (in seconds)
 
     # Function args must be a sequence type. Therefore, if passing only a single
-    # arg, be careful to add a comma so that Python knows a sequence.
+    # arg, be careful to add a comma so that Python knows it is a sequence.
     # E.g., use (True,) and not (True).
+    # List of lists. Inner list: deltaTime in seconds, function, function args list
     sequence = [
                    [0.0,    lightTest, (True,)],
                    [0.3,    lightTest, (False,)],
@@ -188,13 +186,8 @@ def startMission():
                    [6.0,    lightTest, (False,)]
             ]
 
-    s = sched.scheduler(time.time, time.sleep)
-
     for event in sequence:
-        s.enter(startDelay + event[0], 1, event[1], event[2])
-
-    # Note that this is a blocking call
-    s.run()
+        Timer(startDelay+event[0], event[1], event[2]).start()
 
 
 def initiateSequencer():
@@ -211,12 +204,13 @@ def initiateSequencer():
             'LANDING BAG',
             'RESCUE'
             ]
+    et = 0
     for light in sequenceLights:
-        setSequenceLight(light, 'red')
-        sleep(1)
-        setSequenceLight(light, 'off')
-        setSequenceLight(light, 'green')
-        sleep(1)
+        Timer(et, setSequenceLight, (light, 'red')).start()
+        et += 0.5
+        Timer(et, setSequenceLight, (light, 'off')).start()
+        Timer(et, setSequenceLight, (light, 'green')).start()
+        et += 0.5
 
 
 def setSequenceLight(light, color):
