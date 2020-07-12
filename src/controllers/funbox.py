@@ -91,7 +91,7 @@ def handleSwitchEvent(event):
     elif eventName == 'BLOOD PRESS - STOP=>pressed':
         stopAudio()
     elif eventName == 'FUSE: SUIT FAN=>ON':
-        initiateSequencer()
+        runSequencer(0.5)
     elif eventName == 'LIGHT TEST=>ON':
         lightTest(on=True)
     elif eventName == 'LIGHT TEST=>OFF':
@@ -193,27 +193,57 @@ def startMission():
                    [0.0,    lightTest, (True,)],
                    [0.3,    lightTest, (False,)],
                    [0.35,   setSequenceLight, ('JETT TOWER', 'red')],
+                   [0.45,   setSequenceLight, ('JETT TOWER', 'off')],
                    [0.5,    setSequenceLight, ('JETT TOWER', 'green')],
                    [1.0,    setSequenceLight, ('SEP CAPSULE', 'red')],
+                   [1.4,    setSequenceLight, ('SEP CAPSULE', 'off')],
                    [1.5,    setSequenceLight, ('SEP CAPSULE', 'green')],
                    [2.0,    setSequenceLight, ('JETT TOWER', 'off')],
-                   [2.5,    setLight, ('ABORT', True)],
-                   [2.6,    setLight, ('ABORT', False)],
-                   [2.7,    setLight, ('ABORT', True)],
-                   [2.8,    setLight, ('ABORT', False)],
-                   [2.9,    setLight, ('ABORT', True)],
-                   [3.0,    setLight, ('ABORT', False)],
-                   [3.1,    setLight, ('ABORT', True)],
-                   [3.2,    setLight, ('ABORT', False)],
+                   [2.5,    flashLight, ('ABORT', 0.1, 0.1, 10)],
                    [4.0,    lightTest, (True,)],
-                   [6.0,    lightTest, (False,)]
+                   [6.0,    lightTest, (False,)],
+                   [8.0,    runSequencer, (0.5,) ],
+                   [10.2,   runAlarmSequence, (0.5,) ],
+                   [14.0,   flashLight, ('CABIN PRESS', 0.5, 0.2, 100)],
+                   [30.0,   setSequenceLight, ('LANDING BAG', 'off')],
+                   [30.5,   setSequenceLight, ('LANDING BAG', 'red')],
             ]
 
     for event in sequence:
         Timer(startDelay+event[0], event[1], event[2]).start()
 
 
-def initiateSequencer():
+def flashLight(light, onTime, offTime, count):
+    et = 0
+    for i in range(count):
+        Timer(et, setLight, (light, True)).start()
+        et += onTime
+        Timer(et, setLight, (light, False)).start()
+        et += offTime
+
+
+def runAlarmSequence(delay):
+    alarmLights = [
+            'CABIN PRESS',
+            'O2 QUAN',
+            'O2 EMER',
+            'EXCESS SUIT H2O',
+            'EXCESS CABIN H2O',
+            'FUEL QUAN',
+            'RETRO WARN',
+            'RETRO RESET',
+            'STBY AC-AUTO'
+            ]
+
+    et = 0
+    for light in alarmLights:
+        Timer(et, setLight, (light, True)).start()
+        et += delay
+        Timer(et, setLight, (light, False)).start()
+        et += delay
+
+
+def runSequencer(delay):
     sequenceLights = [
             'JETT TOWER',
             'SEP CAPSULE',
@@ -230,10 +260,10 @@ def initiateSequencer():
     et = 0
     for light in sequenceLights:
         Timer(et, setSequenceLight, (light, 'red')).start()
-        et += 0.5
+        et += delay
         Timer(et, setSequenceLight, (light, 'off')).start()
         Timer(et, setSequenceLight, (light, 'green')).start()
-        et += 0.5
+        et += delay
 
 
 def setSequenceLight(light, color):
