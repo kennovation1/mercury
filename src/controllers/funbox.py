@@ -87,11 +87,21 @@ def handleSwitchEvent(event):
     eventName = event['eventName']
 
     if eventName == 'TIME ZERO=>pressed':
-        startMission()
+        startMission('1')
     elif eventName == 'BLOOD PRESS - STOP=>pressed':
         stopAudio()
     elif eventName == 'FUSE: SUIT FAN=>ON':
-        runSequencer(0.5)
+        startMission('2')
+    elif eventName == 'FUSE: ENVIR CONTL=>ON':
+        startMission('3')
+    elif eventName == 'FUSE: RETRO MAN=>ON':
+        startMission('4')
+    elif eventName == 'FUSE: BLOOD PRESS=>ON':
+        startMission('5')
+    elif eventName == 'VOX PWR=>ON':
+        startMission('6')
+    elif eventName == 'BLOOD PRESS - START=>PRESSED':
+        startMission('7')
     elif eventName == 'LIGHT TEST=>ON':
         lightTest(on=True)
     elif eventName == 'LIGHT TEST=>OFF':
@@ -110,6 +120,7 @@ def handleSwitchEvent(event):
         processMainPanelFuseEvents(eventName, state=False)
     elif eventName == 'INLET VALVE PWR=>BYPASS':
         setLight('ABORT', True)
+        runSequencer(0.5)
     elif eventName == 'INLET VALVE PWR=>NORM':
         setLight('ABORT', False)
     elif eventName == 'ISOL BTRY=>STBY':
@@ -165,8 +176,8 @@ def processMainPanelFuseEvents(eventName, state):
     sendLightCommand(message)
 
 
-def startAudio():
-    audioFile = '/home/pi/mercury/src/audio/mp3s/ma-6-audio-1.mp3'
+def startAudio(missionPhase):
+    audioFile = '/home/pi/mercury/src/audio/mp3s/ma-6-audio-' + missionPhase + '.mp3'
     args = ['omxplayer', '--no-keys', audioFile]
     # preexec_fn is needed so that we can later kill by process group
     global AudioProcess
@@ -181,8 +192,8 @@ def stopAudio():
         AudioProcess = None
 
 
-def startMission():
-    startAudio()
+def startMission(missionPhase):
+    startAudio(missionPhase)
 
     startDelay = 1.0  # Initial delay from button press (in seconds)
     # Function args must be a sequence type. Therefore, if passing only a single
