@@ -100,7 +100,7 @@ def handleSwitchEvent(event):
         startMission('5')
     elif eventName == 'VOX PWR=>ON':
         startMission('6')
-    elif eventName == 'BLOOD PRESS - START=>PRESSED':
+    elif eventName == 'BLOOD PRESS - START=>pressed':
         startMission('7')
     elif eventName == 'LIGHT TEST=>ON':
         lightTest(on=True)
