@@ -1,0 +1,286 @@
+<html>
+    <head>
+        <script src="http://cdn.rawgit.com/Mikhus/canvas-gauges/gh-pages/download/2.1.7/radial/gauge.min.js"></script>
+    </head>
+
+    <body>
+        <canvas id="LongAccel"></canvas>
+        <canvas id="Decent"></canvas>
+        <canvas id="Alt"></canvas>
+
+        <canvas id="CabinPressure"></canvas>
+        <canvas id="CabinAir"></canvas>
+        <canvas id="RelativeHumidity"></canvas>
+        <canvas id="CoolantQuantity"></canvas>
+        <canvas id="SteamTemp"></canvas>
+
+        <canvas id="DCVolts"></canvas>
+        <canvas id="DCAmps"></canvas>
+        <canvas id="ACVolts"></canvas>
+
+        <script>
+        // For gauge libary doc, see: https://canvas-gauges.com/
+        // These guages are okay for now, but they are not completely accurate
+        // to Friendship 7.
+        // Some issues:
+        // Needle shape is a triangle instead of a rectangle with a point
+        // Titles do not wrap
+        // Minor tick marks are all the same size
+        // Some font sizes are off (e.g., for relative humidity)
+        // Real relative humidity guage seems to have non-linear markings
+        // Create a guage that is similar to a STEAM TEMP gauge
+
+        function makeSteamTempLikeGauge(canvasId, title, units) {
+            var newgauge = new RadialGauge({
+                renderTo: canvasId,
+                width: 300,
+                height: 300,
+                units: units,
+                title: title,
+                minValue: 0,
+                maxValue: 100,
+                majorTicks: [0,20,40,60,80,100],
+                minorTicks: 4,
+                strokeTicks: false,
+                highlights: '[]',
+                ticksAngle: 240,
+                startAngle: 0,
+                colorMajorTicks: '#ddd',
+                colorMinorTicks: '#ddd',
+                colorTitle: '#eee',
+                colorUnits: '#ccc',
+                colorNumbers: '#eee',
+                colorPlate: '#222',
+                borderShadowWidth: 0,
+                borders: false,
+
+                needleType: 'arrow',
+                needleWidth: 5,
+                needleStart: 0,
+                needleEnd: 90,
+                needleCircleSize: 7,
+                needleCircleOuter: true,
+                needleCircleInner: false,
+
+                colorNeedle: '#eee',
+                colorNeedleEnd: '#eee',
+                colorNeedleShadowDown: '#333',
+                colorNeedleCircleOuter: '#333',
+                colorNeedleCircleOuterEnd: '#111',
+                colorNeedleCircleInner: '#111',
+                colorNeedleCircleInnerEnd: '#222',
+
+                animationDuration: 500,
+                animationRule: 'linear',
+                valueBox: false
+            });
+
+            return newgauge;
+        }
+
+        function makeVoltsAmpsGauge(canvasId, title, units) {
+            // TODO So far, same as above except for needleCircleSize
+            // Would like to move center down
+            var newgauge = new RadialGauge({
+                renderTo: canvasId,
+                width: 300,
+                height: 300,
+                units: units,
+                title: title,
+                minValue: 0,
+                maxValue: 100,
+                majorTicks: [0,20,40,60,80,100],
+                minorTicks: 4,
+                strokeTicks: false,
+                highlights: '[]',
+                ticksAngle: 240,
+                startAngle: 0,
+                colorMajorTicks: '#ddd',
+                colorMinorTicks: '#ddd',
+                colorTitle: '#eee',
+                colorUnits: '#ccc',
+                colorNumbers: '#eee',
+                colorPlate: '#222',
+                borderShadowWidth: 0,
+                borders: false,
+
+                needleType: 'arrow',
+                needleWidth: 5,
+                needleStart: 0,
+                needleEnd: 90,
+                needleCircleSize: 18,
+                needleCircleOuter: true,
+                needleCircleInner: false,
+
+                colorNeedle: '#eee',
+                colorNeedleEnd: '#eee',
+                colorNeedleShadowDown: '#333',
+                colorNeedleCircleOuter: '#333',
+                colorNeedleCircleOuterEnd: '#111',
+                colorNeedleCircleInner: '#111',
+                colorNeedleCircleInnerEnd: '#222',
+
+                animationDuration: 500,
+                animationRule: 'linear',
+                valueBox: false
+            });
+
+            return newgauge;
+        }
+
+
+        // STEAM TEMP gauge
+        gSteamTemp = makeSteamTempLikeGauge('SteamTemp', 'STEAM TEMP', 'PERCENT');
+        gSteamTemp.draw();
+        gSteamTemp.value = 50;
+
+        // COOLANT QUANITY gauge
+        gCoolantQuantity = makeSteamTempLikeGauge('CoolantQuantity', 'COOLANT QUANTITY', 'PERCENT');
+        gCoolantQuantity.draw();
+        gCoolantQuantity.value = 80;
+
+        // CABIN AIR guage
+        gCabinAir = makeSteamTempLikeGauge('CabinAir', '°F', 'CABIN AIR');
+        gCabinAir.update({
+            maxValue: 250,
+            majorTicks: [0,50,100,150,200,250],
+            minorTicks: 5,
+            ticksAngle: 300,
+            startAngle: 30,
+        });
+        gCabinAir.draw();
+        gCabinAir.value = 190;
+
+        // RELATIVE HUMIDITY gauge
+        gRelativeHumidity = makeSteamTempLikeGauge('RelativeHumidity', 'CABIN RELATIVE HUMIDITY', 'PERCENT');
+        gRelativeHumidity.update({
+            majorTicks: [20,40,50,60,70,80,90,100],
+        });
+        gRelativeHumidity.draw();
+        gRelativeHumidity.value = 30;
+
+        // CABIN PRESSURE gauge
+        gCabinPressure = makeSteamTempLikeGauge('CabinPressure', 'CABIN PRESSURE', 'PSIA');
+        gCabinPressure.update({
+            maxValue: 15,
+            majorTicks: [0,3,6,9,12,15],
+            minorTicks: 3
+        });
+        gCabinPressure.draw();
+        gCabinPressure.value = 14.7;
+
+        // LONGITUDINAL ACCLERATION gauge
+        gLongAccel = makeSteamTempLikeGauge('LongAccel', 'LONGITUDINAL ACCELERATION', 'g UNITS');
+        gLongAccel.update({
+            minValue: -10,
+            maxValue: 21,
+            majorTicks: [-9,-6,-3,0,3,6,9,12,15,18,21],
+            minorTicks: 3,
+            ticksAngle: 330,
+            startAngle: -10,
+        });
+        gLongAccel.draw();
+        gLongAccel.value = 0;
+
+        // DESCENT gauge
+        // TODO Need to flip rotation direction
+        gDecent = makeSteamTempLikeGauge('Decent', 'DECENT', 'FT/SEC');
+        gDecent.update({
+            minValue: 0,
+            maxValue: 15,
+            majorTicks: [0,2,4,6,10,14],
+            minorTicks: 4,
+            ticksAngle: 180,
+            startAngle: 90,
+        });
+        gDecent.draw();
+        gDecent.value = 0;
+
+        // ALT gauge
+        gAlt = makeSteamTempLikeGauge('Alt', 'ALT', '1000 FEET');
+        gAlt.update({
+            minValue: 0,
+            maxValue: 100,
+            majorTicks: [0,10,20,30,40,50,60,70,80,90,100],
+            minorTicks: 10,
+            ticksAngle: 350,
+            startAngle: 10,
+        });
+        gAlt.draw();
+        gAlt.value = 0;
+
+        // DC VOLTS  gauge
+        gDCVolts = makeVoltsAmpsGauge('DCVolts', 'DC VOLTS', '');
+        gDCVolts.update({
+            minValue: 0,
+            maxValue: 30,
+            majorTicks: [0,10,20,30],
+            minorTicks: 2,
+            ticksAngle: 90,
+            startAngle: 135,
+        });
+        gDCVolts.draw();
+        gDCVolts.value = 0;
+
+        // DC AMPS  gauge
+        gDCAmps = makeVoltsAmpsGauge('DCAmps', 'DC AMPS', '');
+        gDCAmps.update({
+            minValue: 0,
+            maxValue: 50,
+            majorTicks: [0,10,20,30,40,50],
+            minorTicks: 1,
+            ticksAngle: 90,
+            startAngle: 135,
+        });
+        gDCAmps.draw();
+        gDCAmps.value = 0;
+
+
+        // AC VOLTS  gauge
+        gACVolts = makeVoltsAmpsGauge('ACVolts', 'AC VOLTS', '');
+        gACVolts.update({
+            minValue: 0,
+            maxValue: 150,
+            majorTicks: [0,50,100,150],
+            minorTicks: 5,
+            ticksAngle: 90,
+            startAngle: 135,
+        });
+        gACVolts.draw();
+        gACVolts.value = 0;
+
+
+        // Test with some random animations
+        function animateGauges() {
+            document.gauges.forEach(function(gauge) {
+                setInterval(function() {
+                    gauge.value = Math.random() *
+                        (gauge.options.maxValue - gauge.options.minValue) +
+                        gauge.options.minValue;
+                }, gauge.animation.duration + 50);
+            });
+        }
+
+        // TODO animateGauges();
+        </script>
+
+        <script>
+            var socket = new WebSocket("ws://192.168.1.12:5100/");
+            socket.onmessage = function (event) {
+                // Get one message per gauge update. JSON contains 'gauge' and 'value' attributes
+                var gaugeInfo = JSON.parse(event.data);
+                console.log('Gauge: ' + gaugeInfo.gauge + ' = ' + gaugeInfo.value);
+                // TODO Use gaugeInfo.gauge to index into an array of gauge handles
+                gCabinPressure.value = gaugeInfo.value;
+            }
+
+            // Tell server we are ready
+            socket.onopen = function (event) {
+                socket.send("GAUGES READY");
+            };
+
+        </script>
+
+    </body>
+
+</html>

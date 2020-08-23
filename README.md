@@ -82,3 +82,53 @@ git commit -m "Initial commit"
 git remote add origin git@github.com:kennovation1/mercury.git
 git push -u origin master
 ```
+
+# Installing Python 3.8.5
+- This failed multiple times following different approaches.
+- The most recent attempt came from: https://installvirtual.com/install-python-3-8-1-on-raspberry-pi-raspbian/
+  - This failed with an OpenSSL error, but was fixed by adding an extra dependencies install line
+- Here the history from the final version that worked:
+```
+sudo apt-get update
+sudo apt-get install -y build-essential tk-dev libncurses5-dev libncursesw5-dev libreadline6-dev libdb5.3-dev libgdbm-dev libsqlite3-dev libssl-dev libbz2-dev libexpat1-dev liblzma-dev zlib1g-dev libffi-dev tar wget vim
+git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc && echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
+source .bashrc 
+pyenv
+sudo apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python-openssl git
+pyenv install 3.8.5
+```
+
+Actually, that's not the full story. pyenv did not seem to be working right so I did the following
+- rm -rf ~/.pyenv  # To remove old attemp of pyenv and python build
+- curl https://pyenv.run | bash  # To install pyenv with some key packages
+- pyenv install 3.8.5  # To build Python 3.8.5
+- Now pyenv and Python seem to be installed properly.
+- *HOWEVER* when I use pyenv local 3.8.5 or pyenv local gauges (after running pyenv virtualenv 3.8.5 gauges)
+  and run python -V it points to /usr/bin/python which though pyenv which python shows a correct path.
+  .pyenv is at the start of the path. I'm stumped for the moment.
+- This seems to have been the missing step:
+  - echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+  - The restart shell
+
+## Python version selection
+- pyenv versions
+- cd to dir for project that needs 3.x and run:
+  - pyenv local 3.8.5
+  - This sets the version just for the local directory
+  - See pyenv doc for other ways to set versions locally and globally
+    - https://realpython.com/intro-to-pyenv/
+- Better yet
+  - pyenv virtualenv 3.8.5 gauges  # From in the gauges dir
+  - pyenv local guages 3.8.5  # To activate the virtual env
+
+# Install websockets
+- Make sure to be in the current pyenv/virtualenv
+- pip install websockets
+- pip install flask  # Was briefly used to verify network access. Not really needed for now.
+
+# Install apache2
+- sudo apt update
+- sudo apt install apache2 -y
+- Files in /var/www/html/
+
