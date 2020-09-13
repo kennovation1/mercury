@@ -128,16 +128,19 @@
             return newgauge;
         }
 
+        Gauges = {};
 
         // STEAM TEMP gauge
         gSteamTemp = makeSteamTempLikeGauge('SteamTemp', 'STEAM TEMP', 'PERCENT');
         gSteamTemp.draw();
         gSteamTemp.value = 50;
+        Gauges['SteamTemp'] = gSteamTemp;
 
         // COOLANT QUANITY gauge
         gCoolantQuantity = makeSteamTempLikeGauge('CoolantQuantity', 'COOLANT QUANTITY', 'PERCENT');
         gCoolantQuantity.draw();
         gCoolantQuantity.value = 80;
+        Gauges['CoolantQuantity'] = gCoolantQuantity;
 
         // CABIN AIR guage
         gCabinAir = makeSteamTempLikeGauge('CabinAir', '°F', 'CABIN AIR');
@@ -150,6 +153,7 @@
         });
         gCabinAir.draw();
         gCabinAir.value = 190;
+        Gauges['CabinAir'] = gCabinAir;
 
         // RELATIVE HUMIDITY gauge
         gRelativeHumidity = makeSteamTempLikeGauge('RelativeHumidity', 'CABIN RELATIVE HUMIDITY', 'PERCENT');
@@ -158,6 +162,7 @@
         });
         gRelativeHumidity.draw();
         gRelativeHumidity.value = 30;
+        Gauges['RelativeHumidity'] = gRelativeHumidity;
 
         // CABIN PRESSURE gauge
         gCabinPressure = makeSteamTempLikeGauge('CabinPressure', 'CABIN PRESSURE', 'PSIA');
@@ -168,6 +173,7 @@
         });
         gCabinPressure.draw();
         gCabinPressure.value = 14.7;
+        Gauges['CabinPressure'] = gCabinPressure;
 
         // LONGITUDINAL ACCLERATION gauge
         gLongAccel = makeSteamTempLikeGauge('LongAccel', 'LONGITUDINAL ACCELERATION', 'g UNITS');
@@ -181,6 +187,7 @@
         });
         gLongAccel.draw();
         gLongAccel.value = 0;
+        Gauges['LongAccel'] = gLongAccel;
 
         // DESCENT gauge
         // TODO Need to flip rotation direction
@@ -195,6 +202,7 @@
         });
         gDecent.draw();
         gDecent.value = 0;
+        Gauges['Decent'] = gDecent;
 
         // ALT gauge
         gAlt = makeSteamTempLikeGauge('Alt', 'ALT', '1000 FEET');
@@ -208,6 +216,7 @@
         });
         gAlt.draw();
         gAlt.value = 0;
+        Gauges['Alt'] = gAlt;
 
         // DC VOLTS  gauge
         gDCVolts = makeVoltsAmpsGauge('DCVolts', 'DC VOLTS', '');
@@ -221,6 +230,7 @@
         });
         gDCVolts.draw();
         gDCVolts.value = 0;
+        Gauges['DCVolts'] = gDCVolts;
 
         // DC AMPS  gauge
         gDCAmps = makeVoltsAmpsGauge('DCAmps', 'DC AMPS', '');
@@ -234,6 +244,7 @@
         });
         gDCAmps.draw();
         gDCAmps.value = 0;
+        Gauges['DCAmps'] = gDCAmps;
 
 
         // AC VOLTS  gauge
@@ -248,6 +259,7 @@
         });
         gACVolts.draw();
         gACVolts.value = 0;
+        Gauges['ACVolts'] = gACVolts;
 
 
         // Test with some random animations
@@ -270,8 +282,7 @@
                 // Get one message per gauge update. JSON contains 'gauge' and 'value' attributes
                 var gaugeInfo = JSON.parse(event.data);
                 console.log('Gauge: ' + gaugeInfo.gauge + ' = ' + gaugeInfo.value);
-                // TODO Use gaugeInfo.gauge to index into an array of gauge handles
-                gCabinPressure.value = gaugeInfo.value;
+                Gauges[gaugeInfo.gauge].value = gaugeInfo.value;
             }
 
             // Tell server we are ready
