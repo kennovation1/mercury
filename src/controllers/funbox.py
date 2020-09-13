@@ -13,6 +13,7 @@ import signal
 
 SwitchesFIFO = '/tmp/mercury-events'
 LightsFIFO = '/tmp/light-commands'
+GaugesFIFO = '/tmp/gauge-commands'
 
 Intensity = 50
 DIM = 50
@@ -302,15 +303,44 @@ def sendLightCommand(message):
     LightsFp.flush()
 
 
+def setGauge(gauge, value):
+    print 'Setting gauge: {} = {}'.format(gauge, value)
+    ''' Send a command to the gauges controller FIFO '''
+    # Newline makes it possible to use readline on the other size so that I have a good message boundary
+    message = {'gauge': gauge, 'value': value}
+    buff = json.dumps(message) + '\n'
+    GaugesFp.write(buff)
+    GaugesFp.flush()
+
+
+def initGauges():
+    print 'Initializing gauges'
+    setGauge('LongAccel', 0)
+    setGauge('Decent', 0)
+    setGauge('Alt', 0)
+    setGauge('CabinPressure', 14.7)
+    setGauge('CabinAir', 80)
+    setGauge('RelativeHumidity', 45)
+    setGauge('CoolantQuantity', 70)
+    setGauge('SteamTemp', 45)
+    setGauge('DCVolts', 28)
+    setGauge('DCAmps', 20)
+    setGauge('ACVolts', 115)
+
+
 ############
 # Main
 ############
 
 makeFifo(SwitchesFIFO)
 makeFifo(LightsFIFO)
+makeFifo(GaugesFIFO)
 
 # Open and writes will block if no reader on fifo (or if full)
 LightsFp = open(LightsFIFO, 'w')
+GaugesFp = open(GaugesFIFO, 'w')
+
+initGauges()
 
 # Open will block until there is a writer and a message is written
 with open(SwitchesFIFO, 'r') as switchesFp:
@@ -326,3 +356,4 @@ with open(SwitchesFIFO, 'r') as switchesFp:
             pass
 
 LightsFp.close()
+GaugesFp.close()

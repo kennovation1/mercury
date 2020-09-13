@@ -1,0 +1,3 @@
+- Copy gauges.html to /var/www/html
+- View using:
+  -  http://192.168.1.12/gauges.html
