@@ -24,7 +24,8 @@ async def time(websocket, path):
         await websocket.send(json.dumps(gauge))
 
         # This is just for sending random data. Delete once integrated.
-        await asyncio.sleep(random.random() * 3)
+        await asyncio.sleep(1)
+        #await asyncio.sleep(random.random() * 3)
 
 start_server = websockets.serve(time, "192.168.1.12", 5100)
 
