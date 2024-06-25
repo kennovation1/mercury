@@ -6,7 +6,7 @@ sudo apt-get update
 sudo apt-get dist-upgrade
 
 # Connection info
-ssh pi@192.168.1.12
+ssh pi@rpi-mercury-1
 See LastPass for password
 
 # All else...
@@ -71,11 +71,23 @@ In practice, each guage will need to be manually calibrated. My SG92R micro serv
 
 # Git
 ```
-#Put this in .bashrc?
+# Setting up ssh keys for git:
+ssh-keygen -t ed25519 -C "kenrobbins@ieee.org"
 eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_rsa
+ssh-add ~/.ssh/id_ed25519
+cat ~/.ssh/id_ed25519.pub
+# Copy ouput and go to GitHub account and add the ssh key
+ssh -T git@github.com # To test
+
+# Add this to .bashrc
+   if [ -z "$SSH_AUTH_SOCK" ]; then
+     eval `ssh-agent -s`
+     ssh-add
+   fi
+```
 
 # Common commands
+```
 git init
 git add README.md 
 git commit -m "Initial commit"
