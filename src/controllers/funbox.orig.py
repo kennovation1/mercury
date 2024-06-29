@@ -321,7 +321,6 @@ def sendLightCommand(message):
 def setGauge(gauge, value):
     print 'Setting gauge: {} = {}'.format(gauge, value)
     ''' Send a command to the gauges controller FIFO '''
-    return
     # Newline makes it possible to use readline on the other size so that I have a good message boundary
     message = {'gauge': gauge, 'value': value}
     buff = json.dumps(message) + '\n'
@@ -350,13 +349,13 @@ def initGauges():
 
 makeFifo(SwitchesFIFO)
 makeFifo(LightsFIFO)
-#makeFifo(GaugesFIFO)
+makeFifo(GaugesFIFO)
 
 # Open and writes will block if no reader on fifo (or if full)
 LightsFp = open(LightsFIFO, 'w')
-#GaugesFp = open(GaugesFIFO, 'w')
+GaugesFp = open(GaugesFIFO, 'w')
 
-#initGauges()
+initGauges()
 
 # Open will block until there is a writer and a message is written
 with open(SwitchesFIFO, 'r') as switchesFp:
@@ -372,4 +371,4 @@ with open(SwitchesFIFO, 'r') as switchesFp:
             pass
 
 LightsFp.close()
-#GaugesFp.close()
+GaugesFp.close()
